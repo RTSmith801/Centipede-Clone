@@ -5,12 +5,14 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
     public float laserSpeed = 5f;
+    private Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
         //instantiate at player position (slightly in front) 
-
+        rb = this.transform.gameObject.GetComponent<Rigidbody2D>();
+        Movement();
     }
 
     // Update is called once per frame
@@ -18,15 +20,16 @@ public class Laser : MonoBehaviour
     {
         //check for collision
         //destroy upon collision
-        Movement();
-        
     }
 
     //Laser movement
     void Movement()
     {
         //move up along y axis
-        transform.position = transform.position + Vector3.up * laserSpeed * Time.deltaTime;
+        //transform.position = transform.position + Vector3.up * laserSpeed * Time.deltaTime;
+        //moving with physics
+        rb.velocity = new Vector3(0, laserSpeed, 0);
+    
     }
 
     //Collision check
@@ -44,6 +47,9 @@ public class Laser : MonoBehaviour
         if (collision.tag == "mushroom")
         {
             Debug.Log("laser collided with " + collision);
+            Mushroom mushroom = collision.gameObject.GetComponent<Mushroom>();
+            mushroom.Hit();
+
             //mushroom damagae +1
             //despawan
             Destroy(this.gameObject);

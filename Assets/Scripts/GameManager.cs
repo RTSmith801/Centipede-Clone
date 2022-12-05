@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,7 +17,14 @@ public class GameManager : MonoBehaviour
     public float movementBoundaryScale = .33f;
     [HideInInspector]
     public float boundaryOffset;
-    
+
+    [Header ("Game Stats")]
+    public int score = 0;
+    public int highScore = 0;
+
+    [HideInInspector]
+    public TextMeshProUGUI scoreboard;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +39,8 @@ public class GameManager : MonoBehaviour
         movementBoundary = GameObject.FindWithTag("movement boundary");
         Boundary();
 
+        score = 0;
+        scoreboard = GameObject.FindWithTag("scoreboard").GetComponent<TextMeshProUGUI>();
     }
     
     //Sets boundary for player movement
@@ -41,5 +51,11 @@ public class GameManager : MonoBehaviour
         boundaryOffset = (arena.transform.localScale.y * (1 - movementBoundaryScale) / 2);
         movementBoundary.transform.localScale = new Vector3(1, movementBoundaryScale, 1);
         movementBoundary.transform.position = new Vector3(0, -boundaryOffset, 0);
+    }
+
+    public void scoreUpdate(int pts)
+    {
+        score += pts;
+        scoreboard.text = "Score " + score; 
     }
 }

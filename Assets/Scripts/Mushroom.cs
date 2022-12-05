@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class Mushroom : MonoBehaviour
 {
+    public int health = 4;
+    public int pts = 1;
+
+    GameManager gm;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        gm = FindObjectOfType<GameManager>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (health <= 0)
+        {
+            gm.scoreUpdate(pts);
+            Destroy(gameObject);            
+        }
+    }
+
+    public void Hit()
+    {   
+        health--;
     }
 }
