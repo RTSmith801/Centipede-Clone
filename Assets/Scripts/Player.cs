@@ -4,23 +4,31 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private GameManager gm;
+    public GameObject laser;
+    
     //Variables
-    Rigidbody2D rb;
     Vector2 movement;
     //used for PlayerMoveKeyboard()
+    [Header("Speed controls")]
     public float playerSpeed = 10f;
+    [Header("Laser position")]
+    public float laserPosition = 1f;
+    
     //used for PlayerMoveMouse()
     float horizontalSpeed = 2.0f;
     float verticalSpeed = 2.0f;
+    //used for FireLaser()
+    bool laserExists = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        gm = FindObjectOfType<GameManager>();
         //set position
         //set health to 1
         //check number of lives
-        //game manager will control score, lives, enemy spawn, etc
-        rb = GetComponent<Rigidbody2D>();
+        //game manager will control score, lives, enemy spawn, etc        
         
     }
 
@@ -32,7 +40,26 @@ public class Player : MonoBehaviour
         //PlayerMoveMouse();
         //fire
         //collisions for player hit by enemy
+        if(Input.GetButton("Fire1")){
+            FireLaser();
+        }
 
+    }
+
+    //fire laser call
+    void FireLaser()
+    {
+        //check if laser exists 
+        //alows only a single laser
+        if (FindObjectOfType<Laser>()){
+            laserExists = true;
+        }else{
+            laserExists = false;
+            //fire laser
+            Vector3 position = transform.position; 
+            position += new Vector3(0f, laserPosition);
+            Instantiate(laser, position, Quaternion.identity);
+        }   
     }
 
     //Player movement keyboard
@@ -40,7 +67,23 @@ public class Player : MonoBehaviour
     {
         float vertical = Input.GetAxis("Vertical") * Time.deltaTime * playerSpeed;
         float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * playerSpeed;
-        transform.Translate(horizontal, vertical, 0);
+        float distance = new Vector3(horizontal, vertical, 0f).magnitude;
+        
+        RaycastHit2D[] collide = Physics2D.BoxCastAll(transform.localPosition, new Vector2(1, 1), 0f, new Vector2(horizontal, vertical), distance);
+
+        foreach(RaycastHit2D collision in collide)
+        {
+            if (collision.transform.gameObject.tag == "mushroom")
+            {   
+                return;
+            }
+        }        
+        transform.Translate(horizontal, vertical, 0);        
+        
+        float x = Mathf.Clamp(transform.position.x, (gm.movementBoundaryX - 0.5f) * -1, gm.movementBoundaryX - 0.5f);
+        float y = Mathf.Clamp(transform.position.y, (gm.movementBoundaryY - 0.5f )* -1 - gm.boundaryOffset, gm.movementBoundaryY - 0.5f - gm. boundaryOffset);
+        transform.position = new Vector3(x, y);
+        
     }
 
     //Player movement mouse
