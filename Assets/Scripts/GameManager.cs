@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public TextMeshProUGUI scoreboard;
 
+    private GameObject mushroom;
+    public int maxRowDensity = 5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,8 +40,9 @@ public class GameManager : MonoBehaviour
         //instantiate mushrooms
         arena = GameObject.FindWithTag("arena");
         movementBoundary = GameObject.FindWithTag("movement boundary");
+        mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
         Boundary();
-
+        BuildLevel();
         score = 0;
         scoreboard = GameObject.FindWithTag("scoreboard").GetComponent<TextMeshProUGUI>();
     }
@@ -51,6 +55,24 @@ public class GameManager : MonoBehaviour
         boundaryOffset = (arena.transform.localScale.y * (1 - movementBoundaryScale) / 2);
         movementBoundary.transform.localScale = new Vector3(1, movementBoundaryScale, 1);
         movementBoundary.transform.position = new Vector3(0, -boundaryOffset, 0);
+    }
+
+    void BuildLevel()
+    {
+        for(int i = 4; i <= arena.transform.localScale.y; i++)
+        {   
+            int rowDensity = Random.Range(1, maxRowDensity + 1);           
+            List<int> density = new List<int>();            
+            while(density.Count < rowDensity)
+            {
+                int rnd = Random.Range(1, (int)arena.transform.localScale.x + 1);
+                if (!density.Contains(rnd))
+                {
+                    Instantiate(mushroom, new Vector3(rnd - movementBoundaryX - .5f, i - (arena.transform.localScale.y / 2) - .5f, 0), Quaternion.identity);
+                    density.Add(rnd);
+                }
+            }
+        }
     }
 
     public void scoreUpdate(int pts)

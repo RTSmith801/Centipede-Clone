@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * playerSpeed;
         float distance = new Vector3(horizontal, vertical, 0f).magnitude;
         
-        RaycastHit2D[] collide = Physics2D.BoxCastAll(transform.localPosition, new Vector2(1, 1), 0f, new Vector2(horizontal, vertical), distance);
+        RaycastHit2D[] collide = Physics2D.BoxCastAll(transform.localPosition, new Vector2(.9f, .9f), 0f, new Vector2(horizontal, vertical), distance);
 
         foreach(RaycastHit2D collision in collide)
         {

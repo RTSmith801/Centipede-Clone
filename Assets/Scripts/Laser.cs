@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    public float laserSpeed = 5f;
+    public float laserSpeed = 100f;
     private Rigidbody2D rb;
+    //Be sure ProjectSettings >> Fixed Timestamp = 0.01
 
     // Start is called before the first frame update
     void Start()
