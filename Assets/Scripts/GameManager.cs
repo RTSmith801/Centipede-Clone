@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     private GameObject mushroom;
     public int maxRowDensity = 5;
 
+    [Header("Audio Manager")]
+    AudioManager am;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +46,8 @@ public class GameManager : MonoBehaviour
         BuildLevel();
         score = 0;
         scoreboard = GameObject.FindWithTag("scoreboard").GetComponent<TextMeshProUGUI>();
+        am = FindObjectOfType<AudioManager>();
+        am.FadeinBGM("BGM1");
     }
     
     //Sets boundary for player movement

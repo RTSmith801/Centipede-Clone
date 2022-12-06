@@ -9,6 +9,7 @@ public class Mushroom : MonoBehaviour
     public int pts = 1;
 
     GameManager gm;
+    AudioManager am;
     SpriteRenderer sr;
     Sprite[] mushroomSpriteAtalas;
     int spriteNum;
@@ -17,6 +18,7 @@ public class Mushroom : MonoBehaviour
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
+        am = FindObjectOfType<AudioManager>();
         sr = GetComponent<SpriteRenderer>();
         mushroomSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Mushroom");
         spriteNum = health;
@@ -30,6 +32,7 @@ public class Mushroom : MonoBehaviour
         if (health <= 0)
         {
             gm.scoreUpdate(pts);
+            am.Play("boop");
             Destroy(gameObject);            
         }
     }

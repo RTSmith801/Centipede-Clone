@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public GameManager gm;
     public GameObject laser;
+    public AudioManager am;
     
     //Variables
     Vector2 movement;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
+        am = FindObjectOfType<AudioManager>();
         //set position
         //set health to 1
         //check number of lives
@@ -59,6 +61,8 @@ public class Player : MonoBehaviour
             Vector3 position = transform.position; 
             position += new Vector3(0.4375f, laserPosition);
             Instantiate(laser, position, Quaternion.identity);
+            print("should be playing sound");
+            am.Play("laser");
         }   
     }
 
@@ -100,14 +104,14 @@ public class Player : MonoBehaviour
     {
         print("trigger with " + collision.name);
 
-        Die();
+        if (collision.tag == "enemy")
+           Die();
     }
 
     void Die()
     {
+        am.Play("boom1");
+        am.Play("playerdeath");
         print("you died!");
-        
-        
-
     }
 }
