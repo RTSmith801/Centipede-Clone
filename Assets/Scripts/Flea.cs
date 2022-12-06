@@ -19,4 +19,8 @@ public class Flea : Enemy
     {
 
     }
+    override protected void GenerateSpriteAtlas()
+    {
+
+    }
 }
