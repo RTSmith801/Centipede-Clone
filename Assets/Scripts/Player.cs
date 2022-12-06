@@ -96,4 +96,18 @@ public class Player : MonoBehaviour
         transform.Translate(h, v, 0);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        print("trigger with " + collision.name);
+
+        Die();
+    }
+
+    void Die()
+    {
+        print("you died!");
+        
+        
+
+    }
 }

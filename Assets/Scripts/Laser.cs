@@ -43,9 +43,7 @@ public class Laser : MonoBehaviour
     {   
         if (collision.tag == "enemy")
         {
-            Debug.Log("laser collided with " + collision);
-            //enemy destroy
-            //despawn
+            collision.GetComponent<Enemy>().Hit();
             Destroy(this.gameObject);
         }
 

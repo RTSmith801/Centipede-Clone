@@ -6,7 +6,8 @@ public abstract class Enemy : MonoBehaviour
 {
     public GameManager gm;
     int health = 1; //Leaving hit function in case there are enemies with health > 1
-    //public int pts;    
+    //protected int pts;
+    protected int pts;    
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +32,7 @@ public abstract class Enemy : MonoBehaviour
         if (health <= 0)
         {
 
-            Die(10);
+            Die(pts);
         }
     }
 
