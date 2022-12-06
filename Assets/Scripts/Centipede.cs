@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Centipede : Enemy
 {
@@ -15,6 +16,12 @@ public class Centipede : Enemy
 
     [SerializeField]
     float verticalTarget;
+
+    //Sprites
+    Sprite[] centipedeHeadSpriteAtalas;
+    Sprite[] centipedeBodySpriteAtalas;
+    string animatorTriggerName;
+    Animator animator;
 
     // Update is called once per frame
     void Update()
@@ -52,7 +59,17 @@ public class Centipede : Enemy
                 break;
         }
 
+        SpriteGeneration();
+    }
 
+    //No longer needed? 
+    override protected void GenerateSpriteAtlas()
+    {
+        centipedeHeadSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Head");
+        centipedeBodySpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Body");
+        animator = GetComponent<Animator>();
+        SpriteGeneration();
+        animator.SetTrigger(animatorTriggerName);
     }
 
     /// <summary>
@@ -74,7 +91,7 @@ public class Centipede : Enemy
                 transform.position = new Vector3(x, transform.position.y);
 
                 UpdateCastDirection();
-                moveState = nextState;
+                MoveStateSwitch(nextState);
                 return;
             }
         }
@@ -108,11 +125,11 @@ public class Centipede : Enemy
             if (transform.position.y <= 0)
             {
                 verticalTarget = 1;
-                moveState = MoveState.ascend;
+                MoveStateSwitch(MoveState.ascend);
             }
             else
             {
-                moveState = MoveState.lateral_descend;
+                MoveStateSwitch(MoveState.lateral_descend);
             }
         }
 
@@ -135,11 +152,11 @@ public class Centipede : Enemy
             if (transform.position.y >= gm.movementBoundaryY - 1)
             {
                 verticalTarget = gm.movementBoundaryY - 2;
-                moveState = MoveState.lateral_descend;
+                MoveStateSwitch(MoveState.lateral_descend);
             }
             else
             {
-                moveState = MoveState.lateral_ascend;
+                MoveStateSwitch(MoveState.lateral_ascend);
             }
         }
     }
@@ -156,12 +173,12 @@ public class Centipede : Enemy
             if (moveState == MoveState.lateral_descend)
             {
                 verticalTarget = transform.position.y - 1;
-                moveState = MoveState.descend;
+                MoveStateSwitch(MoveState.descend);
             }
             else if (moveState == MoveState.lateral_ascend)
             {
                 verticalTarget = transform.position.y + 1;
-                moveState = MoveState.ascend;
+                MoveStateSwitch(MoveState.ascend);
             }
             else
                 Debug.Log("you didn't expect this motherfucker");
@@ -185,4 +202,91 @@ public class Centipede : Enemy
     }
     
     enum MoveState { lateral_descend, descend, dive, ascend, lateral_ascend, follow };
+
+    void MoveStateSwitch(MoveState ms)
+    {
+        moveState = ms;
+        SpriteGeneration();
+        animator.SetTrigger(animatorTriggerName);
+    }
+
+    void SpriteGeneration()
+    {
+        if (isHead)
+        {
+            //using centipedeHeadSpriteAtalas
+            //check MoveState
+            switch (moveState)
+            {
+                case MoveState.lateral_ascend:
+                case MoveState.lateral_descend:
+                    if (movingRight)
+                    {
+                        //use centipedeHeadSpriteAtalas 18 - 23
+                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 18);
+                        animatorTriggerName = "CentipedeHeadMoveRight";
+                    }
+                    else
+                    {
+                        //use centipedeHeadSpriteAtalas 6 - 11
+                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 6);
+                        animatorTriggerName = "CentipedeHeadMoveLeft";
+                    }
+                    break;
+                case MoveState.descend:
+                case MoveState.dive:
+                    //use centipedeHeadSpriteAtalas 12 - 17
+                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 12);
+                    animatorTriggerName = "CentipedeHeadMoveDown";
+                    break;
+                case MoveState.ascend:
+                    //use centipedeHeadSpriteAtalas 0 - 5
+                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 0);
+                    animatorTriggerName = "CentipedeHeadMoveUp";
+                    break;                
+                default:
+                    break;
+            }
+
+        }
+        else
+        {
+            //using centipedeBodySpriteAtalas
+            //check MoveState
+            switch (moveState)
+            {
+                case MoveState.lateral_ascend:
+                case MoveState.lateral_descend:
+                    if (movingRight)
+                    {
+                        //use centipedeHeadSpriteAtalas 18 - 23
+                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 18);
+                        animatorTriggerName = "CentipedeBodyMoveRight";
+                    }
+                    else
+                    {
+                        //use centipedeHeadSpriteAtalas 6 - 11
+                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 6);
+                        animatorTriggerName = "CentipedeBodyMoveLeft";
+                    }
+                    break;
+                case MoveState.descend:
+                case MoveState.dive:
+                    //use centipedeHeadSpriteAtalas 12 - 17
+                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 12);
+                    animatorTriggerName = "CentipedeBodyMoveDown";
+                    break;
+                case MoveState.ascend:
+                    //use centipedeHeadSpriteAtalas 0 - 5
+                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 0);
+                    animatorTriggerName = "CentipedeBodyMoveUp";
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        
+        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + spriteNum);
+    }
 }

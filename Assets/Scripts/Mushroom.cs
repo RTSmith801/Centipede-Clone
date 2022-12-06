@@ -25,6 +25,7 @@ public class Mushroom : MonoBehaviour
         SpriteGeneration();
         print(sr.sprite);
         print(sr);
+
     }
 
     private void Update()

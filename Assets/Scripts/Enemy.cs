@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour
 {
     public GameManager gm;
+    public SpriteRenderer sr;
     int health = 1; //Leaving hit function in case there are enemies with health > 1
     //protected int pts;
     protected int pts;    
@@ -13,6 +14,8 @@ public abstract class Enemy : MonoBehaviour
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
+        sr = GetComponent<SpriteRenderer>();
+        GenerateSpriteAtlas();
     }
 
     // Update is called once per frame
@@ -23,6 +26,7 @@ public abstract class Enemy : MonoBehaviour
 
 
     protected abstract void Move();
+    protected abstract void GenerateSpriteAtlas();
 
 
     public void Hit()

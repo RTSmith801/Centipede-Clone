@@ -19,4 +19,8 @@ public class Scorpion : Enemy
     {
 
     }
+    override protected void GenerateSpriteAtlas()
+    {
+        
+    }
 }
