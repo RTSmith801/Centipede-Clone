@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
             laserExists = false;
             //fire laser
             Vector3 position = transform.position; 
-            position += new Vector3(0.5f, laserPosition);
+            position += new Vector3(0.4375f, laserPosition);
             Instantiate(laser, position, Quaternion.identity);
         }   
     }
