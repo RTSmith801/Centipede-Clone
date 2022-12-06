@@ -6,11 +6,13 @@ public class Laser : MonoBehaviour
 {
     public float laserSpeed = 100f;
     private Rigidbody2D rb;
+    GameManager gm;
     //Be sure ProjectSettings >> Fixed Timestamp = 0.01
 
     // Start is called before the first frame update
     void Start()
     {
+        gm = FindObjectOfType<GameManager>();
         //instantiate at player position (slightly in front) 
         rb = this.transform.gameObject.GetComponent<Rigidbody2D>();
         Movement();
@@ -19,8 +21,11 @@ public class Laser : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //check for collision
-        //destroy upon collision
+        if (transform.localPosition.y > gm.arena.transform.localScale.y - 1)
+        {
+            Destroy(this.gameObject);
+        }
+        Debug.Log("Laser speed = " + rb.velocity);
     }
 
     //Laser movement
@@ -29,8 +34,7 @@ public class Laser : MonoBehaviour
         //move up along y axis
         //transform.position = transform.position + Vector3.up * laserSpeed * Time.deltaTime;
         //moving with physics
-        rb.velocity = new Vector3(0, laserSpeed, 0);
-    
+        rb.velocity = new Vector3(0, laserSpeed, 0);        
     }
 
     //Collision check
@@ -57,16 +61,14 @@ public class Laser : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        //*Note - laser has a frame where it is outside of the collider before is destroyed
-        //can mask by putting a box around our arena? 
-        //Debug.Log("laser left collision with " + collision);
-        if (collision.tag == "arena")
-        {
-            //Debug.Log("laser has left the building");
-            Destroy(this.gameObject);
-            //despawn
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    //*Note - laser has a frame where it is outside of the collider before is destroyed
+    //    //can mask by putting a box around our arena? 
+    //    if (collision.tag == "arena")
+    //    {   
+    //        Destroy(this.gameObject);
+    //        //despawn
+    //    }
+    //}
 }

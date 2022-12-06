@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private GameManager gm;
+    public GameManager gm;
     public GameObject laser;
     
     //Variables
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
             laserExists = false;
             //fire laser
             Vector3 position = transform.position; 
-            position += new Vector3(0f, laserPosition);
+            position += new Vector3(0.5f, laserPosition);
             Instantiate(laser, position, Quaternion.identity);
         }   
     }
@@ -68,8 +68,9 @@ public class Player : MonoBehaviour
         float vertical = Input.GetAxis("Vertical") * Time.deltaTime * playerSpeed;
         float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * playerSpeed;
         float distance = new Vector3(horizontal, vertical, 0f).magnitude;
-        
-        RaycastHit2D[] collide = Physics2D.BoxCastAll(transform.localPosition, new Vector2(.9f, .9f), 0f, new Vector2(horizontal, vertical), distance);
+
+        Vector3 center = transform.localPosition + new Vector3(.5f, .5f);
+        RaycastHit2D[] collide = Physics2D.BoxCastAll(center, new Vector2(.9f, .9f), 0f, new Vector2(horizontal, vertical), distance);
 
         foreach(RaycastHit2D collision in collide)
         {
@@ -80,8 +81,8 @@ public class Player : MonoBehaviour
         }        
         transform.Translate(horizontal, vertical, 0);        
         
-        float x = Mathf.Clamp(transform.position.x, (gm.movementBoundaryX - 0.5f) * -1, gm.movementBoundaryX - 0.5f);
-        float y = Mathf.Clamp(transform.position.y, (gm.movementBoundaryY - 0.5f )* -1 - gm.boundaryOffset, gm.movementBoundaryY - 0.5f - gm. boundaryOffset);
+        float x = Mathf.Clamp(transform.position.x, 0, gm.movementBoundaryX - 1);
+        float y = Mathf.Clamp(transform.position.y, 0, gm.movementBoundaryY - 1);
         transform.position = new Vector3(x, y);
         
     }

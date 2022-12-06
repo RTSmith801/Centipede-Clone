@@ -124,6 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8de288408160d9944944b8f1d2311671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gm: {fileID: 0}
   laser: {fileID: 7312963693234394581, guid: 7657553f20cc3d44ab3427468a6ae6ae, type: 3}
-  playerSpeed: 60
+  playerSpeed: 30
   laserPosition: 1

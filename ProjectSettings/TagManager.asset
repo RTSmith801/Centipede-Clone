@@ -8,6 +8,7 @@ TagManager:
   - movement boundary
   - mushroom
   - scoreboard
+  - enemy
   layers:
   - Default
   - TransparentFX

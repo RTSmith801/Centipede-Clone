@@ -14,9 +14,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public float movementBoundaryY;
     [Header("Boundary size")]
-    public float movementBoundaryScale = .33f;
-    [HideInInspector]
-    public float boundaryOffset;
+    public float movementBoundaryScale = .25f; //divisible by 4
 
     [Header ("Game Stats")]
     public int score = 0;
@@ -50,11 +48,10 @@ public class GameManager : MonoBehaviour
     //Sets boundary for player movement
     void Boundary()
     {
-        movementBoundaryX = arena.transform.localScale.x / 2;
-        movementBoundaryY = arena.transform.localScale.y * movementBoundaryScale / 2;
-        boundaryOffset = (arena.transform.localScale.y * (1 - movementBoundaryScale) / 2);
+        movementBoundaryX = arena.transform.localScale.x;
+        movementBoundaryY = arena.transform.localScale.y * movementBoundaryScale;
         movementBoundary.transform.localScale = new Vector3(1, movementBoundaryScale, 1);
-        movementBoundary.transform.position = new Vector3(0, -boundaryOffset, 0);
+        movementBoundary.transform.position = new Vector3(0, 0, 0);
     }
 
     void BuildLevel()
@@ -68,7 +65,7 @@ public class GameManager : MonoBehaviour
                 int rnd = Random.Range(1, (int)arena.transform.localScale.x + 1);
                 if (!density.Contains(rnd))
                 {
-                    Instantiate(mushroom, new Vector3(rnd - movementBoundaryX - .5f, i - (arena.transform.localScale.y / 2) - .5f, 0), Quaternion.identity);
+                    Instantiate(mushroom, new Vector3(rnd - 1, i - 1, 0), Quaternion.identity);
                     density.Add(rnd);
                 }
             }
