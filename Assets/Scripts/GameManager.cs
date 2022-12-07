@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     [Header("Boundary size")]
     public float movementBoundaryScale = .25f; //divisible by 4
 
-    [Header ("Game Stats")]
+    [Header("Game Stats")]
     public int score = 0;
     public int highScore = 0;
 
@@ -25,6 +25,12 @@ public class GameManager : MonoBehaviour
 
     private GameObject mushroom;
     public int maxRowDensity = 5;
+
+    [SerializeField]
+    List<Centipede> centipedeLivingList; //total
+    GameObject centipede;
+
+
 
     [Header("Audio Manager")]
     AudioManager am;
@@ -42,13 +48,17 @@ public class GameManager : MonoBehaviour
         arena = GameObject.FindWithTag("arena");
         movementBoundary = GameObject.FindWithTag("movement boundary");
         mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
+        centipede = Resources.Load("Prefabs/Centipede") as GameObject;
         Boundary();
         BuildLevel();
+        SpawnCentipedes();
         score = 0;
         scoreboard = GameObject.FindWithTag("scoreboard").GetComponent<TextMeshProUGUI>();
         am = FindObjectOfType<AudioManager>();
         am.FadeinBGM("BGM1");
     }
+
+
     
     //Sets boundary for player movement
     void Boundary()
@@ -75,6 +85,49 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    void SpawnCentipedes()
+    {
+        //define how many cetipedes
+        //set nodeAhead/nodeBehind for centipedes.
+        List<Centipede> centipedeSpawnList = new List<Centipede>();
+        int centipedeGeneration = 7;
+        for (int i = 0; i < centipedeGeneration; i++)
+        {
+            //instation position (15, 39)
+            //currently hardcoded
+            Vector2 instantionPoint = new Vector2(arena.transform.localPosition.x + 15, arena.transform.localPosition.y + 39);
+            Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
+            centipedeSpawnList.Add(c);
+            centipedeLivingList.Add(c);
+        }
+        for (int i = 0; i < centipedeGeneration; i++)
+        {
+            Centipede a;
+            Centipede b;
+            try
+            {
+                a = centipedeSpawnList[i - 1];                
+            }
+
+            catch
+            {
+                a = null;
+            }
+
+            try
+            {   
+                b = centipedeSpawnList[i + 1];
+            }
+            catch
+            {
+                b = null;            
+            }
+                centipedeSpawnList[i].Initialized(a, b);
+        }
+        //set instantion point
+        //Random instantion point as wave progresses 
     }
 
     public void scoreUpdate(int pts)

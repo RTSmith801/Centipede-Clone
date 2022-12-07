@@ -9,6 +9,7 @@ TagManager:
   - mushroom
   - scoreboard
   - enemy
+  - centipede
   layers:
   - Default
   - TransparentFX

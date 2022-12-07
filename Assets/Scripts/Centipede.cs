@@ -6,16 +6,28 @@ using System.Linq;
 public class Centipede : Enemy
 {
     [SerializeField]
-    bool isHead = true;
+    public bool isHead = false;    
     //public int pts = 10;
     bool movingRight = true;
     public float moveSpeed = 5f;
     Vector2 castDirection = Vector2.right;
     [SerializeField]
     MoveState moveState = MoveState.lateral_descend;
+    MoveState centipedeHeadMoveState = MoveState.lateral_descend;
+
+    [SerializeField]
+    Centipede nodeAhead;
+    [SerializeField]
+    Centipede nodeBehind;
+    public int followFrames = 20;
+    [SerializeField]
+    public List<Vector2> followQueue;
 
     [SerializeField]
     float verticalTarget;
+    //used only by centipede followers
+    float horizontalTarget;
+
 
     //Sprites
     Sprite[] centipedeHeadSpriteAtalas;
@@ -23,22 +35,20 @@ public class Centipede : Enemy
     string animatorTriggerName;
     Animator animator;
 
+
     // Update is called once per frame
     void Update()
     {
-        if (isHead){
-            pts = 100;
-        }else{
-            pts = 10;
+        if (nodeBehind != null)
+        {
+            nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
         }
-
         Move();
     }
 
     override protected void Move()
     {
         //move logic
-
         switch (moveState)
         {
             case MoveState.lateral_descend:
@@ -55,6 +65,9 @@ public class Centipede : Enemy
             case MoveState.lateral_ascend:
                 Lateral(1, MoveState.ascend);
                 break;
+            case MoveState.follow:
+                Follow();
+                break;
             default:
                 break;
         }
@@ -62,14 +75,58 @@ public class Centipede : Enemy
         SpriteGeneration();
     }
 
-    //No longer needed? 
-    override protected void GenerateSpriteAtlas()
+    void Follow()
     {
+        //get node ahead's transform 
+        if (followQueue.Count >= followFrames)
+        {
+            transform.position = followQueue[0];
+            followQueue.RemoveAt(0);
+        }
+    }
+
+    //No longer needed? 
+    override protected void LocalStart()
+    {
+        isHead = false;
         centipedeHeadSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Head");
         centipedeBodySpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Body");
         animator = GetComponent<Animator>();
         SpriteGeneration();
-        animator.SetTrigger(animatorTriggerName);
+        //animator.SetTrigger(animatorTriggerName);
+    }
+
+    public void Initialized(Centipede a, Centipede b)
+    {
+        nodeAhead = a;
+        nodeBehind = b;
+
+        if(nodeAhead == null)
+        {
+            isHead = true;
+            MoveStateSwitch(MoveState.lateral_descend);
+        }
+        else
+        {
+            followQueue = new List<Vector2>();
+            MoveStateSwitch(MoveState.follow);
+        }
+    }
+
+    public void LeaderUpdate()
+    {
+        isHead = true;
+        MoveStateSwitch(centipedeHeadMoveState);
+        movingRight = !movingRight;
+    }
+
+    public void FollowQueueAdd(Vector2 newTarget, bool _movingRight, MoveState _centipedeHeadMoveState)
+    {
+        
+        followQueue.Add(newTarget);
+        movingRight = _movingRight;
+        centipedeHeadMoveState = _centipedeHeadMoveState;
+        // Animation call here
     }
 
     /// <summary>
@@ -83,7 +140,23 @@ public class Centipede : Enemy
 
         foreach (RaycastHit2D collision in collide)
         {
-            if (collision.transform.gameObject.tag == "mushroom")
+            bool hitAnotherCentipedeHead = false;
+
+            // check if enemy is a centipede head
+            if (collision.transform.gameObject.tag == "enemy")
+            {
+                int other = collision.transform.gameObject.GetInstanceID();
+                int self = transform.gameObject.GetInstanceID();
+
+                if (collision.transform.GetComponent<Centipede>() != null && self != other)
+                {
+                    hitAnotherCentipedeHead = collision.transform.GetComponent<Centipede>().isHead;
+                }
+            }
+
+
+
+            if (collision.transform.gameObject.tag == "mushroom" || hitAnotherCentipedeHead)
             {
                 //clamp to a column          
                 verticalTarget = transform.position.y + direction;
@@ -201,19 +274,20 @@ public class Centipede : Enemy
         }
     }
     
-    enum MoveState { lateral_descend, descend, dive, ascend, lateral_ascend, follow };
+    public enum MoveState { lateral_descend, descend, dive, ascend, lateral_ascend, follow };
 
     void MoveStateSwitch(MoveState ms)
     {
         moveState = ms;
+        centipedeHeadMoveState = ms;
         SpriteGeneration();
-        animator.SetTrigger(animatorTriggerName);
+        //animator.SetTrigger(animatorTriggerName);
     }
 
     void SpriteGeneration()
     {
-        if (isHead)
-        {
+        //if (isHead)
+        //{
             //using centipedeHeadSpriteAtalas
             //check MoveState
             switch (moveState)
@@ -243,50 +317,79 @@ public class Centipede : Enemy
                     //use centipedeHeadSpriteAtalas 0 - 5
                     //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 0);
                     animatorTriggerName = "CentipedeHeadMoveUp";
-                    break;                
+                    break;
+                case MoveState.follow:
+                    animatorTriggerName = "Follow";
+                    break;
+
                 default:
                     break;
             }
 
+        //}
+        //else
+        //{
+        //    //using centipedeBodySpriteAtalas
+        //    //check MoveState
+        //    switch (moveState)
+        //    {
+        //        case MoveState.follow:
+        //            animatorTriggerName = "Follow";
+        //            break;
+
+            //    case MoveState.lateral_ascend:
+            //    case MoveState.lateral_descend:
+            //        if (movingRight)
+            //        {
+            //            //use centipedeHeadSpriteAtalas 18 - 23
+            //            //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 18);
+            //            animatorTriggerName = "CentipedeBodyMoveRight";
+            //        }
+            //        else
+            //        {
+            //            //use centipedeHeadSpriteAtalas 6 - 11
+            //            //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 6);
+            //            animatorTriggerName = "CentipedeBodyMoveLeft";
+            //        }
+            //        break;
+            //    case MoveState.descend:
+            //    case MoveState.dive:
+            //        //use centipedeHeadSpriteAtalas 12 - 17
+            //        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 12);
+            //        animatorTriggerName = "CentipedeBodyMoveDown";
+            //        break;
+            //    case MoveState.ascend:
+            //        //use centipedeHeadSpriteAtalas 0 - 5
+            //        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 0);
+            //        animatorTriggerName = "CentipedeBodyMoveUp";
+            //        break;
+            //    default:
+            //        break;
+            //}
+
+        
+        
+        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + spriteNum);
+    }
+
+    public override void Hit()
+    {
+        if (isHead)
+        {
+            pts = 100;
         }
         else
         {
-            //using centipedeBodySpriteAtalas
-            //check MoveState
-            switch (moveState)
-            {
-                case MoveState.lateral_ascend:
-                case MoveState.lateral_descend:
-                    if (movingRight)
-                    {
-                        //use centipedeHeadSpriteAtalas 18 - 23
-                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 18);
-                        animatorTriggerName = "CentipedeBodyMoveRight";
-                    }
-                    else
-                    {
-                        //use centipedeHeadSpriteAtalas 6 - 11
-                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 6);
-                        animatorTriggerName = "CentipedeBodyMoveLeft";
-                    }
-                    break;
-                case MoveState.descend:
-                case MoveState.dive:
-                    //use centipedeHeadSpriteAtalas 12 - 17
-                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 12);
-                    animatorTriggerName = "CentipedeBodyMoveDown";
-                    break;
-                case MoveState.ascend:
-                    //use centipedeHeadSpriteAtalas 0 - 5
-                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 0);
-                    animatorTriggerName = "CentipedeBodyMoveUp";
-                    break;
-                default:
-                    break;
-            }
-
+            pts = 10;
         }
-        
-        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + spriteNum);
+
+        if (nodeBehind)
+        {
+            nodeBehind.LeaderUpdate();
+        }
+        print("Are we running this function? Aslo pts = " + pts);
+
+        am.Play("boom2");
+        Die(pts);
     }
 }

@@ -103,8 +103,12 @@ MonoBehaviour:
   gm: {fileID: 0}
   sr: {fileID: 0}
   isHead: 1
-  moveSpeed: 30
+  moveSpeed: 20
   moveState: 0
+  nodeAhead: {fileID: 0}
+  nodeBehind: {fileID: 0}
+  followFrames: 11
+  followQueue: []
   verticalTarget: 0
 --- !u!61 &4355657646874933202
 BoxCollider2D:
