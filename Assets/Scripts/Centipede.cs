@@ -28,13 +28,11 @@ public class Centipede : Enemy
     //used only by centipede followers
     //float horizontalTarget;
 
-
     //Sprites
     Sprite[] centipedeHeadSpriteAtalas;
     Sprite[] centipedeBodySpriteAtalas;
     string animatorTriggerName;
     Animator animator;
-    private GameObject mushroom;
 
     public enum MoveState { lateral_descend, descend, dive, ascend, lateral_ascend, follow };
     public enum MoveStateDirection { up, left, down, right };
@@ -42,7 +40,6 @@ public class Centipede : Enemy
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
     }
 
     //Called in Enemy.cs Start()
@@ -61,7 +58,10 @@ public class Centipede : Enemy
         {
             nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
         }
-        Move();
+        if(gm.pauseGame == false)
+        {
+            Move();
+        }
     }
 
     override protected void Move()
@@ -172,7 +172,8 @@ public class Centipede : Enemy
 
                 UpdateCastDirection();
                 MoveStateSwitch(nextState);
-                print("fuckery happening here");
+                //it's a feature  
+                //print("fuckery happening here");
                 return;
             }
         }
@@ -206,15 +207,15 @@ public class Centipede : Enemy
             if (transform.position.y <= 0)
             {
                 verticalTarget = 1;
-                MoveStateSwitch(MoveState.ascend);
+                //MoveStateSwitch(MoveState.ascend);
+                //Now allows for movement along bottom row
+                MoveStateSwitch(MoveState.lateral_ascend);
             }
             else
             {
                 MoveStateSwitch(MoveState.lateral_descend);
             }
         }
-
-
     }
 
     void Ascend()
@@ -368,11 +369,11 @@ public class Centipede : Enemy
         {
             nodeBehind.LeaderUpdate();
         }
+              
+        Instantiate(gm.mushroom, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
 
-        Instantiate(mushroom, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
-
-        am.Play("boom2");
-        gm.DecrementCentipedeList();
+        gm.am.Play("boom2");
+        gm.DecrementCentipedeList(this.gameObject);
         Die(pts);
     }
 }

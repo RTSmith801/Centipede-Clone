@@ -44,4 +44,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78695b9a8bd36bf48840271a51fb3c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arena: {fileID: 3495083146316926966, guid: fc4ad24350083f546a6bcf66553b66a3, type: 3}
+  movementBoundaryScale: 0.25
+  score: 0
+  highScore: 0
+  centipedeWave: 0
+  centipedeDespawnTime: 0.1
+  arenaGenerationTime: 0.0001
+  pauseGame: 0
+  startingPlayerLives: 3
+  playerLives: 0
+  maxRowDensity: 20
+  startingCentipedeGenerationCount: 10
+  centipedeLivingList: []
+  laserExists: 0
+  laser: {fileID: 0}
+  mushroom: {fileID: 0}
+  am: {fileID: 0}
+  arena: {fileID: 0}
+  movementBoundary: {fileID: 0}
+  movementBoundaryX: 0
+  movementBoundaryY: 0
+  mainCam: {fileID: 0}

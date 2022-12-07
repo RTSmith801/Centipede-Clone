@@ -11,21 +11,23 @@ public abstract class Enemy : MonoBehaviour
     protected int pts;
 
 
-    protected AudioManager am;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
         sr = GetComponent<SpriteRenderer>();
-        am = FindObjectOfType<AudioManager>();
         LocalStart();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Move();
+        if (!gm.pauseGame)
+        {
+            Move();
+        }
     }
 
     protected abstract void Move();

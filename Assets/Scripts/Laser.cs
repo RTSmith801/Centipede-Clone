@@ -25,6 +25,7 @@ public class Laser : MonoBehaviour
         //Movement called once
         Movement();
         //Laser sound called here
+        gm.laserExists = true;
         gm.am.Play("laser");
     }
     
@@ -33,7 +34,7 @@ public class Laser : MonoBehaviour
         //Destroy laser if laser has left arena
         if (transform.localPosition.y >= gm.arena.transform.localScale.y - 1)
         {
-            Destroy(this.gameObject);
+            LaserDespawn();
         }
     }
 
@@ -49,14 +50,20 @@ public class Laser : MonoBehaviour
         if (collision.tag == "enemy")
         {
             collision.GetComponent<Enemy>().Hit();
-            Destroy(this.gameObject);
+            LaserDespawn();
         }
 
         if (collision.tag == "mushroom")
         {   
             Mushroom mushroom = collision.gameObject.GetComponent<Mushroom>();
             mushroom.Hit();
-            Destroy(this.gameObject);
+            LaserDespawn();
         }
+    }
+
+    void LaserDespawn()
+    {
+        gm.laserExists = false;
+        Destroy(this.gameObject);
     }
 }

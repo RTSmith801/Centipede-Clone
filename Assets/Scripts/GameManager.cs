@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 /// <summary>
@@ -22,19 +23,35 @@ public class GameManager : MonoBehaviour
     public int highScore = 0;
     public int centipedeWave = 0;
 
+    //Used for manually creating delays;
+    public float centipedeDespawnTime = 0.1f;
+    public float arenaGenerationTime = 0.0001f;
+    public float gameRestartTime = 2f;
+
+    //Gameplay Variables
+    //Used to start/stop gameplay
+    public bool gameOver = false;
+    public bool pauseGame = false;
+    public int startingPlayerLives = 3;
+    public int playerLives;
     //Used for initial mushroom generation
     public int maxRowDensity = 5;
     //Used for initial centipede generation call. 
+    public int startingCentipedeGenerationCount = 10;
     //Incremented everytime all centipedes are destroyed
-    int centipedeGeneration = 10;
-
+    int centipedeGenerationCount;
     [SerializeField]
     List<Centipede> centipedeLivingList; //total
 
+
+    //used for FireLaser()
+    public bool laserExists = false;
+
     //Prefabs loaded in from resources
     public GameObject laser;
-    GameObject mushroom;
+    public GameObject mushroom;
     GameObject centipede;
+    GameObject player;
 
     //Required in Unity Scene
     [Header("Audio Manager")]
@@ -57,6 +74,7 @@ public class GameManager : MonoBehaviour
         laser = Resources.Load("Prefabs/Laser") as GameObject;
         mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
         centipede = Resources.Load("Prefabs/Centipede") as GameObject;
+        player = Resources.Load("Prefabs/Player") as GameObject;
     }
 
     void BuildReferences()
@@ -69,14 +87,17 @@ public class GameManager : MonoBehaviour
     }
     
     void Start()
-    {   
-        Boundary();
-        BuildLevel();
-        NewCentipedeWave();
+    {
+        gameOver = false;
+        pauseGame = true;
         score = 0;
-        am.FadeinBGM("BGM1");
+        playerLives = startingPlayerLives;
+        centipedeGenerationCount = startingCentipedeGenerationCount;
+        Boundary();
+        StartCoroutine(BuildArena());
+        
     }
-    
+
     //Sets boundary for player movement
     void Boundary()
     {
@@ -86,23 +107,61 @@ public class GameManager : MonoBehaviour
         movementBoundary.transform.position = new Vector3(0, 0, 0);
     }
 
-    void BuildLevel()
+    //Builds arena then starts game
+    private IEnumerator BuildArena()
     {
-        for(int i = 4; i <= arena.transform.localScale.y; i++)
-        {   
-            int rowDensity = Random.Range(1, maxRowDensity + 1);           
-            List<int> density = new List<int>();            
-            while(density.Count < rowDensity)
+        //for (int i = 4; i <= arena.transform.localScale.y; i++)
+        for (int i = (int)arena.transform.localScale.y; i > 3; i--)
+        {
+            int rowDensity = Random.Range(1, maxRowDensity + 1);
+            List<int> density = new List<int>();
+            while (density.Count < rowDensity)
             {
                 int rnd = Random.Range(1, (int)arena.transform.localScale.x + 1);
                 if (!density.Contains(rnd))
                 {
                     Instantiate(mushroom, new Vector3(rnd - 1, i - 1, 0), Quaternion.identity);
                     density.Add(rnd);
+                    yield return new WaitForSeconds(arenaGenerationTime);
                 }
             }
         }
+        NewCentipedeWave();
+        am.FadeinBGM("BGM1");
+        pauseGame = false;
     }
+
+    private void Update()
+    {
+        if(gameOver && Input.GetButton("Fire1"))
+        {
+            StopAllCoroutines();
+            StartCoroutine(RestartGame());
+        }
+    }
+
+    private IEnumerator RestartGame()
+    {   
+        yield return new WaitForSeconds(gameRestartTime);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private IEnumerator RestartWave()
+    {
+        //Despawn enemies
+        for (int i = centipedeLivingList.Count - 1; i >= 0; i--)
+        {
+            Destroy(centipedeLivingList[i].transform.gameObject);
+            yield return new WaitForSeconds(centipedeDespawnTime);
+        }
+        centipedeLivingList.Clear();
+        Vector2 instantionPoint = new Vector2(arena.transform.localPosition.x + 15, arena.transform.localPosition.y);
+        Instantiate(player, instantionPoint, Quaternion.identity);
+        scoreUpdate(0);
+        pauseGame = false;
+        SpawnCentipedes();
+    }
+    
 
     void NewCentipedeWave()
     {
@@ -116,15 +175,16 @@ public class GameManager : MonoBehaviour
     {   
         //set nodeAhead/nodeBehind for centipedes.
         List<Centipede> centipedeSpawnList = new List<Centipede>();
-        for (int i = 0; i < centipedeGeneration; i++)
+        for (int i = 0; i < centipedeGenerationCount; i++)
         {
             //Currently hardcoded - instation position (15, 39) - to randomize
-            Vector2 instantionPoint = new Vector2(arena.transform.localPosition.x + 15, arena.transform.localPosition.y + 39);
+            int rand = Random.Range(1, 31);
+            Vector2 instantionPoint = new Vector2(rand, arena.transform.localPosition.y + 39);
             Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
             centipedeSpawnList.Add(c);
             centipedeLivingList.Add(c);
         }
-        for (int i = 0; i < centipedeGeneration; i++)
+        for (int i = 0; i < centipedeGenerationCount; i++)
         {
             Centipede a;
             Centipede b;
@@ -153,22 +213,46 @@ public class GameManager : MonoBehaviour
     public void scoreUpdate(int pts)
     {
         score += pts;
-        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave; 
+        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave + "\nLIVES " + playerLives; 
     }
 
-    public void DecrementCentipedeList()
+    public void DecrementCentipedeList(GameObject c)
     {
-        centipedeLivingList.RemoveAt(0);
-        if(centipedeLivingList.Count <= 0)
+        //centipedeLivingList.RemoveAt(0);
+        centipedeLivingList.Remove(c.GetComponent<Centipede>());
+        if (centipedeLivingList.Count <= 0)
         {
-            centipedeGeneration += 2;
+            centipedeGenerationCount += 2;
             NewCentipedeWave();
         }
     }
 
     public void PlayerDeath()
     {
-        am.Play("boom1");
-        am.Play("playerdeath");
+        //Bool used here to prevent multiple calls PlayerDeath()
+        if (pauseGame == false)
+        {   
+            pauseGame = true;
+            am.Play("boom1");
+            am.Play("playerdeath");
+            playerLives-= 1;
+            if (playerLives >= 0)
+            {
+                StopAllCoroutines();
+                StartCoroutine(RestartWave());
+            }
+            else
+            {
+                EndGame();
+            }
+        }
     }
+
+    void EndGame()
+    {
+        gameOver = true;
+        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave + "\nGAME OVER"; 
+    }
+
+  
 }

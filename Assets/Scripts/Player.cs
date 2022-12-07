@@ -22,8 +22,6 @@ public class Player : MonoBehaviour
     //used for PlayerMoveMouse()
     float horizontalSpeed = 2.0f;
     float verticalSpeed = 2.0f;
-    //used for FireLaser()
-    bool laserExists = false;
 
     private void Awake()
     {
@@ -38,11 +36,15 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Player movement
-        PlayerMoveKeyboard();
-        //PlayerMoveMouse();
-        if(Input.GetButton("Fire1")){
-            FireLaser();
+        if (!gm.pauseGame)
+        {
+            //Player movement
+            PlayerMoveKeyboard();
+            //PlayerMoveMouse();
+            if (Input.GetButton("Fire1"))
+            {
+                FireLaser();
+            }
         }
     }
 
@@ -50,10 +52,8 @@ public class Player : MonoBehaviour
     void FireLaser()
     {
         //check if laser exists - currently, allows only a single laser
-        if (FindObjectOfType<Laser>()){
-            laserExists = true;
-        }else{
-            laserExists = false;
+        if(!gm.laserExists)
+        {   
             //fire laser
             Vector3 position = transform.position; 
             position += new Vector3(0.4375f, laserPosition);

@@ -81,3 +81,31 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     source: {fileID: 0}
+  - name: BGM1
+    clip: {fileID: 8300000, guid: e2bb4f1a3456c4c31b7915fc19277c5a, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: BGM2
+    clip: {fileID: 8300000, guid: 534d8510198eb439989d42c35e668efe, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: BGM3
+    clip: {fileID: 8300000, guid: ef18f5ac728304f72af2b94ae3628bce, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: BGM4
+    clip: {fileID: 8300000, guid: 9dbe4296e836648f49c2f25f9ff53171, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
