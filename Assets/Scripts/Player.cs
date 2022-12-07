@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
     {
         //Player movement
         PlayerMoveKeyboard();
-        PlayerMoveMouse();
+        //PlayerMoveMouse();
         if(Input.GetButton("Fire1")){
             FireLaser();
         }
@@ -66,8 +66,8 @@ public class Player : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = false;
         }
 
         float vertical = Input.GetAxis("Vertical") * Time.deltaTime * playerSpeed;
