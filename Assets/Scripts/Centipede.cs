@@ -7,13 +7,13 @@ public class Centipede : Enemy
 {
     [SerializeField]
     public bool isHead = false;    
-    //public int pts = 10;
     bool movingRight = true;
     public float moveSpeed = 5f;
     Vector2 castDirection = Vector2.right;
     [SerializeField]
     MoveState moveState = MoveState.lateral_descend;
     MoveState centipedeHeadMoveState = MoveState.lateral_descend;
+    MoveStateDirection moveStateDirection = MoveStateDirection.down;
 
     [SerializeField]
     Centipede nodeAhead;
@@ -26,7 +26,7 @@ public class Centipede : Enemy
     [SerializeField]
     float verticalTarget;
     //used only by centipede followers
-    float horizontalTarget;
+    //float horizontalTarget;
 
 
     //Sprites
@@ -34,7 +34,25 @@ public class Centipede : Enemy
     Sprite[] centipedeBodySpriteAtalas;
     string animatorTriggerName;
     Animator animator;
+    private GameObject mushroom;
 
+    public enum MoveState { lateral_descend, descend, dive, ascend, lateral_ascend, follow };
+    public enum MoveStateDirection { up, left, down, right };
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+        mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
+    }
+
+    //Called in Enemy.cs Start()
+    override protected void LocalStart()
+    {   
+        isHead = false;
+        centipedeHeadSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Head");
+        centipedeBodySpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Body");
+        SpriteGeneration();
+    }
 
     // Update is called once per frame
     void Update()
@@ -84,18 +102,7 @@ public class Centipede : Enemy
             followQueue.RemoveAt(0);
         }
     }
-
-    //No longer needed? 
-    override protected void LocalStart()
-    {
-        isHead = false;
-        centipedeHeadSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Head");
-        centipedeBodySpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Body");
-        animator = GetComponent<Animator>();
-        SpriteGeneration();
-        //animator.SetTrigger(animatorTriggerName);
-    }
-
+   
     public void Initialized(Centipede a, Centipede b)
     {
         nodeAhead = a;
@@ -165,6 +172,7 @@ public class Centipede : Enemy
 
                 UpdateCastDirection();
                 MoveStateSwitch(nextState);
+                print("fuckery happening here");
                 return;
             }
         }
@@ -273,103 +281,76 @@ public class Centipede : Enemy
             castDirection = Vector2.left;
         }
     }
-    
-    public enum MoveState { lateral_descend, descend, dive, ascend, lateral_ascend, follow };
 
+   
     void MoveStateSwitch(MoveState ms)
     {
         moveState = ms;
         centipedeHeadMoveState = ms;
         SpriteGeneration();
-        //animator.SetTrigger(animatorTriggerName);
+
+        //Set moveStateDirection here
+        switch (ms)
+        {
+            case MoveState.ascend:
+                moveStateDirection = MoveStateDirection.up;
+                break;
+            case MoveState.lateral_ascend:
+                if (movingRight)
+                {
+                    moveStateDirection = MoveStateDirection.right;
+                }
+                else
+                {
+                    moveStateDirection = MoveStateDirection.left;
+                }
+                break;
+            case MoveState.descend:
+            case MoveState.dive:
+                moveStateDirection = MoveStateDirection.down;
+                break;
+            case MoveState.lateral_descend:
+                if (movingRight)
+                {
+                    moveStateDirection = MoveStateDirection.right;
+                }
+                else
+                {
+                    moveStateDirection = MoveStateDirection.left;
+                }
+                break;
+        }
+        animator.SetTrigger(animatorTriggerName);
     }
 
     void SpriteGeneration()
-    {
-        //if (isHead)
-        //{
-            //using centipedeHeadSpriteAtalas
-            //check MoveState
+    {   
             switch (moveState)
             {
                 case MoveState.lateral_ascend:
                 case MoveState.lateral_descend:
                     if (movingRight)
-                    {
-                        //use centipedeHeadSpriteAtalas 18 - 23
-                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 18);
+                    {   
                         animatorTriggerName = "CentipedeHeadMoveRight";
                     }
                     else
                     {
-                        //use centipedeHeadSpriteAtalas 6 - 11
-                        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 6);
                         animatorTriggerName = "CentipedeHeadMoveLeft";
                     }
                     break;
                 case MoveState.descend:
                 case MoveState.dive:
-                    //use centipedeHeadSpriteAtalas 12 - 17
-                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 12);
                     animatorTriggerName = "CentipedeHeadMoveDown";
                     break;
                 case MoveState.ascend:
-                    //use centipedeHeadSpriteAtalas 0 - 5
-                    //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 0);
                     animatorTriggerName = "CentipedeHeadMoveUp";
                     break;
                 case MoveState.follow:
-                    animatorTriggerName = "Follow";
+                    animatorTriggerName = "CentipedeBodyMoveUp";
                     break;
-
                 default:
                     break;
             }
-
-        //}
-        //else
-        //{
-        //    //using centipedeBodySpriteAtalas
-        //    //check MoveState
-        //    switch (moveState)
-        //    {
-        //        case MoveState.follow:
-        //            animatorTriggerName = "Follow";
-        //            break;
-
-            //    case MoveState.lateral_ascend:
-            //    case MoveState.lateral_descend:
-            //        if (movingRight)
-            //        {
-            //            //use centipedeHeadSpriteAtalas 18 - 23
-            //            //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 18);
-            //            animatorTriggerName = "CentipedeBodyMoveRight";
-            //        }
-            //        else
-            //        {
-            //            //use centipedeHeadSpriteAtalas 6 - 11
-            //            //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 6);
-            //            animatorTriggerName = "CentipedeBodyMoveLeft";
-            //        }
-            //        break;
-            //    case MoveState.descend:
-            //    case MoveState.dive:
-            //        //use centipedeHeadSpriteAtalas 12 - 17
-            //        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 12);
-            //        animatorTriggerName = "CentipedeBodyMoveDown";
-            //        break;
-            //    case MoveState.ascend:
-            //        //use centipedeHeadSpriteAtalas 0 - 5
-            //        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + 0);
-            //        animatorTriggerName = "CentipedeBodyMoveUp";
-            //        break;
-            //    default:
-            //        break;
-            //}
-
-        
-        
-        //sr.sprite = centipedeHeadSpriteAtalas.Single(s => s.name == "Centipede Head_" + spriteNum);
     }
 
     public override void Hit()
@@ -387,9 +368,11 @@ public class Centipede : Enemy
         {
             nodeBehind.LeaderUpdate();
         }
-        print("Are we running this function? Aslo pts = " + pts);
+
+        Instantiate(mushroom, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
 
         am.Play("boom2");
+        gm.DecrementCentipedeList();
         Die(pts);
     }
 }

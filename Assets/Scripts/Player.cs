@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// If player is not in scene, should be instantiated by GameManager
+/// 
+/// </summary>
 public class Player : MonoBehaviour
 {
-    public GameManager gm;
-    public GameObject laser;
-    public AudioManager am;
+    GameManager gm;
     
     //Variables
     Vector2 movement;
+    Vector3 mousePos;
     //used for PlayerMoveKeyboard()
     [Header("Speed controls")]
     public float playerSpeed = 10f;
@@ -22,15 +25,13 @@ public class Player : MonoBehaviour
     //used for FireLaser()
     bool laserExists = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         gm = FindObjectOfType<GameManager>();
-        am = FindObjectOfType<AudioManager>();
-        //set position
-        //set health to 1
-        //check number of lives
-        //game manager will control score, lives, enemy spawn, etc        
+    }
+    
+    void Start()
+    {
         
     }
 
@@ -39,20 +40,16 @@ public class Player : MonoBehaviour
     {
         //Player movement
         PlayerMoveKeyboard();
-        //PlayerMoveMouse();
-        //fire
-        //collisions for player hit by enemy
+        PlayerMoveMouse();
         if(Input.GetButton("Fire1")){
             FireLaser();
         }
-
     }
 
     //fire laser call
     void FireLaser()
     {
-        //check if laser exists 
-        //alows only a single laser
+        //check if laser exists - currently, allows only a single laser
         if (FindObjectOfType<Laser>()){
             laserExists = true;
         }else{
@@ -60,15 +57,19 @@ public class Player : MonoBehaviour
             //fire laser
             Vector3 position = transform.position; 
             position += new Vector3(0.4375f, laserPosition);
-            Instantiate(laser, position, Quaternion.identity);
-            print("should be playing sound");
-            am.Play("laser");
+            Instantiate(gm.laser, position, Quaternion.identity);
         }   
     }
 
     //Player movement keyboard
     void PlayerMoveKeyboard()
     {
+        if (Input.anyKeyDown)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         float vertical = Input.GetAxis("Vertical") * Time.deltaTime * playerSpeed;
         float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * playerSpeed;
         float distance = new Vector3(horizontal, vertical, 0f).magnitude;
@@ -83,35 +84,40 @@ public class Player : MonoBehaviour
                 return;
             }
         }        
-        transform.Translate(horizontal, vertical, 0);        
-        
-        float x = Mathf.Clamp(transform.position.x, 0, gm.movementBoundaryX - 1);
-        float y = Mathf.Clamp(transform.position.y, 0, gm.movementBoundaryY - 1);
-        transform.position = new Vector3(x, y);
-        
+        transform.Translate(horizontal, vertical, 0);
+        ClampPlayerMovement();
     }
 
     //Player movement mouse
     void PlayerMoveMouse()
     {
-        // Get the mouse delta. This is not in the range -1...1
-        float h = horizontalSpeed * Input.GetAxis("Mouse X");
-        float v = verticalSpeed * Input.GetAxis("Mouse Y");
-        transform.Translate(h, v, 0);
+        if (Input.GetMouseButtonDown(1))
+        {
+            print("locking cursor");
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        
+        mousePos = gm.mainCam.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0f;
+        transform.position = mousePos;
+        ClampPlayerMovement();
+    }
+
+    void ClampPlayerMovement()
+    {
+        float x = Mathf.Clamp(transform.position.x, 0, gm.movementBoundaryX - 1);
+        float y = Mathf.Clamp(transform.position.y, 0, gm.movementBoundaryY - 1);
+        transform.position = new Vector3(x, y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print("trigger with " + collision.name);
-
+        //Player death called when colliding with enemy
         if (collision.tag == "enemy")
-           Die();
-    }
-
-    void Die()
-    {
-        am.Play("boom1");
-        am.Play("playerdeath");
-        print("you died!");
+        {
+            gm.PlayerDeath();
+            Destroy(gameObject);
+        }  
     }
 }

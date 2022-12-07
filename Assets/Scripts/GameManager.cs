@@ -3,62 +3,79 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// All resource load handled by GameManager
+/// Keeps track of player lives & centipedes alive
+/// Spawns enemies
+/// Controls arena size
+/// Keeps track of score  
+/// Keeps track of high-score - to do
+/// Add life for every X score reached - to do
+/// </summary>
 public class GameManager : MonoBehaviour
-{
-    [HideInInspector]
-    public GameObject arena;
-    [HideInInspector]
-    public GameObject movementBoundary;
-    [HideInInspector]
-    public float movementBoundaryX;
-    [HideInInspector]
-    public float movementBoundaryY;
+{   
     [Header("Boundary size")]
-    public float movementBoundaryScale = .25f; //divisible by 4
+    public float movementBoundaryScale = .25f; //Keep divisible by 4
 
     [Header("Game Stats")]
     public int score = 0;
     public int highScore = 0;
+    public int centipedeWave = 0;
 
-    [HideInInspector]
-    public TextMeshProUGUI scoreboard;
-
-    private GameObject mushroom;
+    //Used for initial mushroom generation
     public int maxRowDensity = 5;
+    //Used for initial centipede generation call. 
+    //Incremented everytime all centipedes are destroyed
+    int centipedeGeneration = 10;
 
     [SerializeField]
     List<Centipede> centipedeLivingList; //total
+
+    //Prefabs loaded in from resources
+    public GameObject laser;
+    GameObject mushroom;
     GameObject centipede;
 
-
-
+    //Required in Unity Scene
     [Header("Audio Manager")]
-    AudioManager am;
+    public AudioManager am; //Is public so AudioManager can be called by through GameManager.
+    public GameObject arena; //Create accessor for this 
+    public GameObject movementBoundary; //create accessor for this 
+    public float movementBoundaryX; //create accessor for this 
+    public float movementBoundaryY; //create accessor for this 
+    TextMeshProUGUI scoreboard;
+    public Camera mainCam;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        //Keeps track of lives
-        //Starting lives 3
-        //Keeps track of score
-        //Add life for every X score reached
-        //Keeps track of high-score
-        //Controls enemy spawn
-        //instantiate mushrooms
-        arena = GameObject.FindWithTag("arena");
-        movementBoundary = GameObject.FindWithTag("movement boundary");
-        mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
-        centipede = Resources.Load("Prefabs/Centipede") as GameObject;
-        Boundary();
-        BuildLevel();
-        SpawnCentipedes();
-        score = 0;
-        scoreboard = GameObject.FindWithTag("scoreboard").GetComponent<TextMeshProUGUI>();
-        am = FindObjectOfType<AudioManager>();
-        am.FadeinBGM("BGM1");
+        LoadPrefabs();
+        BuildReferences();
     }
 
+    void LoadPrefabs()
+    {
+        laser = Resources.Load("Prefabs/Laser") as GameObject;
+        mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
+        centipede = Resources.Load("Prefabs/Centipede") as GameObject;
+    }
 
+    void BuildReferences()
+    {
+        am = FindObjectOfType<AudioManager>();
+        arena = GameObject.FindWithTag("arena");
+        movementBoundary = GameObject.FindWithTag("movement boundary");
+        scoreboard = GameObject.FindWithTag("scoreboard").GetComponent<TextMeshProUGUI>();
+        mainCam = GameObject.FindObjectOfType<Camera>();
+    }
+    
+    void Start()
+    {   
+        Boundary();
+        BuildLevel();
+        NewCentipedeWave();
+        score = 0;
+        am.FadeinBGM("BGM1");
+    }
     
     //Sets boundary for player movement
     void Boundary()
@@ -87,16 +104,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SpawnCentipedes()
+    void NewCentipedeWave()
     {
-        //define how many cetipedes
+        centipedeWave++;
+        scoreUpdate(0);
+        SpawnCentipedes();
+    }
+
+    //Instantiaion point needs to be randomized here
+    void SpawnCentipedes()
+    {   
         //set nodeAhead/nodeBehind for centipedes.
         List<Centipede> centipedeSpawnList = new List<Centipede>();
-        int centipedeGeneration = 7;
         for (int i = 0; i < centipedeGeneration; i++)
         {
-            //instation position (15, 39)
-            //currently hardcoded
+            //Currently hardcoded - instation position (15, 39) - to randomize
             Vector2 instantionPoint = new Vector2(arena.transform.localPosition.x + 15, arena.transform.localPosition.y + 39);
             Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
             centipedeSpawnList.Add(c);
@@ -126,13 +148,27 @@ public class GameManager : MonoBehaviour
             }
                 centipedeSpawnList[i].Initialized(a, b);
         }
-        //set instantion point
-        //Random instantion point as wave progresses 
     }
 
     public void scoreUpdate(int pts)
     {
         score += pts;
-        scoreboard.text = "Score " + score; 
+        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave; 
+    }
+
+    public void DecrementCentipedeList()
+    {
+        centipedeLivingList.RemoveAt(0);
+        if(centipedeLivingList.Count <= 0)
+        {
+            centipedeGeneration += 2;
+            NewCentipedeWave();
+        }
+    }
+
+    public void PlayerDeath()
+    {
+        am.Play("boom1");
+        am.Play("playerdeath");
     }
 }

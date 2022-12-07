@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1857557621}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,7 +110,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.875, y: 1}
+  m_Size: {x: 0.875, y: 0.9}
   m_EdgeRadius: 0
 --- !u!114 &1857557621
 MonoBehaviour:
@@ -126,5 +126,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gm: {fileID: 0}
   laser: {fileID: 7312963693234394581, guid: 7657553f20cc3d44ab3427468a6ae6ae, type: 3}
+  am: {fileID: 0}
   playerSpeed: 30
   laserPosition: 1
