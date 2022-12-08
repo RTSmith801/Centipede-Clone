@@ -28,9 +28,7 @@ public class Centipede : Enemy
     //used only by centipede followers
     //float horizontalTarget;
 
-    //Sprites
-    Sprite[] centipedeHeadSpriteAtalas;
-    Sprite[] centipedeBodySpriteAtalas;
+    //Animation
     string animatorTriggerName;
     Animator animator;
 
@@ -46,8 +44,6 @@ public class Centipede : Enemy
     override protected void LocalStart()
     {   
         isHead = false;
-        centipedeHeadSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Head");
-        centipedeBodySpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Centipede Body");
         SpriteGeneration();
     }
 

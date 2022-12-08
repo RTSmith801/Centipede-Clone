@@ -21,12 +21,14 @@ public class GameManager : MonoBehaviour
     [Header("Game Stats")]
     public int score = 0;
     public int highScore = 0;
+    public bool highScoreReached = false;
     public int centipedeWave = 0;
 
     //Used for manually creating delays;
     public float centipedeDespawnTime = 0.1f;
     public float arenaGenerationTime = 0.0001f;
-    public float gameRestartTime = 2f;
+    public float gameOverTimer = 2f;
+    public float playerExplosionTime = 0.025f;
 
     //Gameplay Variables
     //Used to start/stop gameplay
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
     public GameObject mushroom;
     GameObject centipede;
     GameObject player;
+    public GameObject playerExplosion;
 
     //Required in Unity Scene
     [Header("Audio Manager")]
@@ -75,6 +78,7 @@ public class GameManager : MonoBehaviour
         mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
         centipede = Resources.Load("Prefabs/Centipede") as GameObject;
         player = Resources.Load("Prefabs/Player") as GameObject;
+        playerExplosion = Resources.Load("Prefabs/PlayerExplosion") as GameObject;
     }
 
     void BuildReferences()
@@ -90,12 +94,12 @@ public class GameManager : MonoBehaviour
     {
         gameOver = false;
         pauseGame = true;
+        highScoreReached = false;
         score = 0;
         playerLives = startingPlayerLives;
         centipedeGenerationCount = startingCentipedeGenerationCount;
         Boundary();
         StartCoroutine(BuildArena());
-        
     }
 
     //Sets boundary for player movement
@@ -134,16 +138,9 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if(gameOver && Input.GetButton("Fire1"))
-        {
-            StopAllCoroutines();
-            StartCoroutine(RestartGame());
+        {   
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-    }
-
-    private IEnumerator RestartGame()
-    {   
-        yield return new WaitForSeconds(gameRestartTime);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private IEnumerator RestartWave()
@@ -213,7 +210,12 @@ public class GameManager : MonoBehaviour
     public void scoreUpdate(int pts)
     {
         score += pts;
-        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave + "\nLIVES " + playerLives; 
+        if(score > highScore)
+        {
+            highScore = score;
+            highScoreReached = true;
+        }
+        scoreboard.text = "LIVES " + playerLives + "\nWAVE " + centipedeWave + "\nSCORE " + score + "\nHIGH SCORE " + highScore; 
     }
 
     public void DecrementCentipedeList(GameObject c)
@@ -243,16 +245,23 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                EndGame();
+                StopAllCoroutines();
+                StartCoroutine(GameOver());
             }
         }
     }
 
-    void EndGame()
+    private IEnumerator GameOver()
     {
-        gameOver = true;
-        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave + "\nGAME OVER"; 
-    }
+        if (highScoreReached)
+        {
+            //Flash High Score
+        }
+        //Flash Game Over Text? 
+        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave + "\nGAME OVER";
+        yield return new WaitForSeconds(gameOverTimer);
 
-  
+        //Press Fire To Restart. 
+        gameOver = true;
+    }
 }

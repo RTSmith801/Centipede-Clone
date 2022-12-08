@@ -47,9 +47,13 @@ MonoBehaviour:
   movementBoundaryScale: 0.25
   score: 0
   highScore: 0
+  highScoreReached: 0
   centipedeWave: 0
   centipedeDespawnTime: 0.1
   arenaGenerationTime: 0.0001
+  gameOverTimer: 2
+  playerExplosionTime: 0.025
+  gameOver: 0
   pauseGame: 0
   startingPlayerLives: 3
   playerLives: 0
@@ -59,6 +63,7 @@ MonoBehaviour:
   laserExists: 0
   laser: {fileID: 0}
   mushroom: {fileID: 0}
+  playerExplosion: {fileID: 0}
   am: {fileID: 0}
   arena: {fileID: 0}
   movementBoundary: {fileID: 0}

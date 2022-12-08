@@ -39,8 +39,8 @@ public class Player : MonoBehaviour
         if (!gm.pauseGame)
         {
             //Player movement
-            PlayerMoveKeyboard();
-            //PlayerMoveMouse();
+            //PlayerMoveKeyboard();
+            PlayerMoveMouse();
             if (Input.GetButton("Fire1"))
             {
                 FireLaser();
@@ -117,6 +117,9 @@ public class Player : MonoBehaviour
         if (collision.tag == "enemy")
         {
             gm.PlayerDeath();
+            Vector3 position = transform.position;
+            //position += new Vector3(0.4375f, laserPosition);
+            Instantiate(gm.playerExplosion, position, Quaternion.identity);
             Destroy(gameObject);
         }  
     }
