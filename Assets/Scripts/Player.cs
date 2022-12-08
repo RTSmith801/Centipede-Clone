@@ -34,13 +34,28 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    //void Update()
+    //{
+    //    if (!gm.pauseGame)
+    //    {
+    //        //Player movement
+    //        //PlayerMoveKeyboard();
+    //        PlayerMoveMouse();
+    //        if (Input.GetButton("Fire1"))
+    //        {
+    //            FireLaser();
+    //        }
+    //    }
+    //}
+    
+    // Update is called once per frame
+    void FixedUpdate()
     {
         if (!gm.pauseGame)
         {
             //Player movement
-            //PlayerMoveKeyboard();
-            PlayerMoveMouse();
+            PlayerMoveKeyboard();
+            //PlayerMoveMouse();
             if (Input.GetButton("Fire1"))
             {
                 FireLaser();

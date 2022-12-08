@@ -48,13 +48,26 @@ public class Centipede : Enemy
     }
 
     // Update is called once per frame
-    void Update()
+    //void Update()
+    //{
+    //    if (nodeBehind != null)
+    //    {
+    //        nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
+    //    }
+    //    if(gm.pauseGame == false)
+    //    {
+    //        Move();
+    //    }
+    //}
+
+    //Fixed Update to check if this changes build behavior. 
+    private void FixedUpdate()
     {
         if (nodeBehind != null)
         {
             nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
         }
-        if(gm.pauseGame == false)
+        if (gm.pauseGame == false)
         {
             Move();
         }

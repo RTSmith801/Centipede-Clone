@@ -21,13 +21,21 @@ public abstract class Enemy : MonoBehaviour
         LocalStart();
     }
 
-    // Update is called once per frame
-    void Update()
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    if (!gm.pauseGame)
+    //    {
+    //        Move();
+    //    }
+    //}
+
+    private void FixedUpdate()
     {
-        if (!gm.pauseGame)
-        {
-            Move();
-        }
+         if (!gm.pauseGame)
+         {
+             Move();
+         }
     }
 
     protected abstract void Move();
