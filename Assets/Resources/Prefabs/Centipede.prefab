@@ -107,7 +107,7 @@ MonoBehaviour:
   moveState: 0
   nodeAhead: {fileID: 0}
   nodeBehind: {fileID: 0}
-  followFrames: 11
+  followFrames: 7
   followQueue: []
   verticalTarget: 0
 --- !u!61 &4355657646874933202

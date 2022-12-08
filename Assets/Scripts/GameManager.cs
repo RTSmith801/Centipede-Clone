@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Stats")]
     public int score = 0;
-    public int highScore = 0;
+    public int highScore; // get and set using PlayerPrefs
     public bool highScoreReached = false;
     public int centipedeWave = 0;
 
@@ -100,6 +100,9 @@ public class GameManager : MonoBehaviour
         centipedeGenerationCount = startingCentipedeGenerationCount;
         Boundary();
         StartCoroutine(BuildArena());
+
+        //Fetch the high score from the PlayerPrefs. If no Int of this name exists, the default is 0.
+        highScore = PlayerPrefs.GetInt("highScore", 0);
     }
 
     //Sets boundary for player movement
@@ -203,7 +206,7 @@ public class GameManager : MonoBehaviour
             {
                 b = null;            
             }
-                centipedeSpawnList[i].Initialized(a, b);
+            centipedeSpawnList[i].Initialized(a, b);
         }
     }
 
@@ -255,10 +258,13 @@ public class GameManager : MonoBehaviour
     {
         if (highScoreReached)
         {
-            //Flash High Score
+            //Set High Score
+            //Flash High Score - To do
+            scoreboard.text = "\nWAVE " + centipedeWave + "\nNEW HIGH SCORE " + highScore + "\nGAME OVER";
+            PlayerPrefs.SetInt("highScore", highScore);
         }
         //Flash Game Over Text? 
-        scoreboard.text = "SCORE " + score + "\nWAVE " + centipedeWave + "\nGAME OVER";
+        scoreboard.text = "\nWAVE " + centipedeWave + "\nSCORE " + score + "\nHIGH SCORE " + highScore + "\nGAME OVER";
         yield return new WaitForSeconds(gameOverTimer);
 
         //Press Fire To Restart. 

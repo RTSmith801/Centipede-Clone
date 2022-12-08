@@ -19,7 +19,7 @@ public class Centipede : Enemy
     Centipede nodeAhead;
     [SerializeField]
     Centipede nodeBehind;
-    public int followFrames = 20;
+    public int followFrames = 7;
     [SerializeField]
     public List<Vector2> followQueue;
 
