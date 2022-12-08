@@ -256,6 +256,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameOver()
     {
+        //Flash Game Over Text? 
+        scoreboard.text = "\nWAVE " + centipedeWave + "\nSCORE " + score + "\nHIGH SCORE " + highScore + "\nGAME OVER";
+
         if (highScoreReached)
         {
             //Set High Score
@@ -263,10 +266,9 @@ public class GameManager : MonoBehaviour
             scoreboard.text = "\nWAVE " + centipedeWave + "\nNEW HIGH SCORE " + highScore + "\nGAME OVER";
             PlayerPrefs.SetInt("highScore", highScore);
         }
-        //Flash Game Over Text? 
-        scoreboard.text = "\nWAVE " + centipedeWave + "\nSCORE " + score + "\nHIGH SCORE " + highScore + "\nGAME OVER";
-        yield return new WaitForSeconds(gameOverTimer);
 
+        yield return new WaitForSeconds(gameOverTimer);
+        
         //Press Fire To Restart. 
         gameOver = true;
     }
