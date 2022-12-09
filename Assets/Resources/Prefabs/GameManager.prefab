@@ -57,7 +57,7 @@ MonoBehaviour:
   pauseGame: 0
   startingPlayerLives: 3
   playerLives: 0
-  maxRowDensity: 20
+  maxRowDensity: 10
   startingCentipedeGenerationCount: 10
   centipedeLivingList: []
   laserExists: 0

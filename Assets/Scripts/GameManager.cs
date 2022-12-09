@@ -10,7 +10,7 @@ using TMPro;
 /// Spawns enemies
 /// Controls arena size
 /// Keeps track of score  
-/// Keeps track of high-score - to do
+/// Keeps track of high-score
 /// Add life for every X score reached - to do
 /// </summary>
 public class GameManager : MonoBehaviour
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     public int startingPlayerLives = 3;
     public int playerLives;
     //Used for initial mushroom generation
-    public int maxRowDensity = 5;
+    public int maxRowDensity = 10;
     //Used for initial centipede generation call. 
     public int startingCentipedeGenerationCount = 10;
     //Incremented everytime all centipedes are destroyed
@@ -257,8 +257,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator GameOver()
     {
         //Flash Game Over Text? 
-        scoreboard.text = "\nWAVE " + centipedeWave + "\nSCORE " + score + "\nHIGH SCORE " + highScore + "\nGAME OVER";
-
+        scoreUpdate(0);
         if (highScoreReached)
         {
             //Set High Score
