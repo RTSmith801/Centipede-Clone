@@ -40,4 +40,8 @@ public class Flea : Enemy
         yTarget = transform.position.y - 1;
     }
 
+	protected override void LocalDeath()
+	{
+        gm.SpawnFlea();
+	}
 }

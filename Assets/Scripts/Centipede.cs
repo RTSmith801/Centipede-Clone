@@ -386,4 +386,9 @@ public class Centipede : Enemy
         gm.DecrementCentipedeList(this.gameObject);
         Die(pts);
     }
+
+	protected override void LocalDeath()
+	{
+
+	}
 }

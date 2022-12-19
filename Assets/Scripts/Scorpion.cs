@@ -23,4 +23,9 @@ public class Scorpion : Enemy
     {
         
     }
+
+	protected override void LocalDeath()
+	{
+		throw new System.NotImplementedException();
+	}
 }

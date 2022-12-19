@@ -25,8 +25,8 @@ public class Mushroom : MonoBehaviour
         mushroomSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Mushroom");
         spriteNum = health;
         SpriteGeneration();
-        print(sr.sprite);
-        print(sr);
+        //print(sr.sprite);
+        //print(sr);
         gm.am.Play("boop");
     }
 

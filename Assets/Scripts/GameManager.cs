@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 /// <summary>
 /// All resource load handled by GameManager
@@ -46,6 +47,10 @@ public class GameManager : MonoBehaviour
     int centipedeGenerationCount;
     [SerializeField]
     List<Centipede> centipedeLivingList; //total
+    // Flea / other enemy related variables
+    float fleaTimeMin = 10f;
+    float fleaTimeMax = 30f;
+    float fleaSpawnTimer;
 
 
     //used for FireLaser()
@@ -55,6 +60,7 @@ public class GameManager : MonoBehaviour
     public GameObject laser;
     public GameObject mushroom;
     GameObject centipede;
+    GameObject flea;
     GameObject player;
     public GameObject playerExplosion;
 
@@ -79,7 +85,8 @@ public class GameManager : MonoBehaviour
         laser = Resources.Load("Prefabs/Laser") as GameObject;
         mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
         centipede = Resources.Load("Prefabs/Centipede") as GameObject;
-        player = Resources.Load("Prefabs/Player") as GameObject;
+        flea = Resources.Load("Prefabs/Flea") as GameObject;
+		player = Resources.Load("Prefabs/Player") as GameObject;
         playerExplosion = Resources.Load("Prefabs/PlayerExplosion") as GameObject;
     }
 
@@ -150,18 +157,27 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RestartWave()
     {
-        //Despawn enemies
+        //Despawn enemies (centipedes)
         for (int i = centipedeLivingList.Count - 1; i >= 0; i--)
         {
             Destroy(centipedeLivingList[i].transform.gameObject);
             yield return new WaitForSeconds(centipedeDespawnTime);
         }
-        centipedeLivingList.Clear();
+
+		// Despawn enemies (everything else)
+		Enemy[] remainingEnemies = FindObjectsOfType<Enemy>();
+		foreach (Enemy enemy in remainingEnemies)
+		{
+            Destroy(enemy.gameObject);
+		}
+
+
+		centipedeLivingList.Clear();
         Vector2 instantionPoint = new Vector2(arena.transform.localPosition.x + 15, arena.transform.localPosition.y);
         Instantiate(player, instantionPoint, Quaternion.identity);
         scoreUpdate(0);
         pauseGame = false;
-        SpawnCentipedes();
+        SpawnEnemies();
     }
     
 
@@ -169,19 +185,29 @@ public class GameManager : MonoBehaviour
     {
         centipedeWave++;
         scoreUpdate(0);
-        SpawnCentipedes();
+        SpawnEnemies();
+
+
+
     }
 
+
+    Vector2 GetEnemyInstantiationPointTop()
+    {
+		int rand = Random.Range(1, (int)movementBoundaryX);
+		Vector2 instantionPoint = new Vector2(rand, arena.transform.localPosition.y + 39);
+
+        return instantionPoint;
+	}
+
     //Instantiaion point needs to be randomized here
-    void SpawnCentipedes()
+    void SpawnEnemies()
     {   
         //set nodeAhead/nodeBehind for centipedes.
         List<Centipede> centipedeSpawnList = new List<Centipede>();
         for (int i = 0; i < centipedeGenerationCount; i++)
         {
-            //Currently hardcoded - instation position (15, 39) - to randomize
-            int rand = Random.Range(1, 31);
-            Vector2 instantionPoint = new Vector2(rand, arena.transform.localPosition.y + 39);
+			Vector2 instantionPoint = GetEnemyInstantiationPointTop();
             Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
             centipedeSpawnList.Add(c);
             centipedeLivingList.Add(c);
@@ -210,7 +236,13 @@ public class GameManager : MonoBehaviour
             }
             centipedeSpawnList[i].Initialized(a, b);
         }
-    }
+
+		// Spawn Fleas
+		if (centipedeWave >= 2)
+		{
+			SpawnFlea();
+		}
+	}
 
     public void scoreUpdate(int pts)
     {
@@ -273,4 +305,23 @@ public class GameManager : MonoBehaviour
         //Press Fire To Restart. 
         gameOver = true;
     }
+
+    public void SpawnFlea()
+    {
+     
+        fleaSpawnTimer = Random.Range(fleaTimeMin, fleaTimeMax);
+		print("SpawnFlea() called with a timer of " + fleaSpawnTimer);
+
+        StartCoroutine(SpawnFleaCoroutine());
+    }
+
+    private IEnumerator SpawnFleaCoroutine()
+    {
+		yield return new WaitForSeconds(fleaSpawnTimer);
+
+        print("SpawnFleaCoroutine running now");
+
+		Vector2 instantionPoint = GetEnemyInstantiationPointTop();
+        Instantiate(flea, instantionPoint, Quaternion.identity);
+	}
 }

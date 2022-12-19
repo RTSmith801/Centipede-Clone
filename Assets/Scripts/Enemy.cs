@@ -40,7 +40,8 @@ public abstract class Enemy : MonoBehaviour
 
     protected abstract void Move();
     protected abstract void LocalStart();
-    public virtual void Hit()
+	protected abstract void LocalDeath();
+	public virtual void Hit()
     {
         health--;
 
@@ -52,6 +53,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected void Die(int pts)
     {
+        LocalDeath();
         gm.scoreUpdate(pts);
         Destroy(gameObject);
     }
