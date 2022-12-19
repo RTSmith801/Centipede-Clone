@@ -6,7 +6,7 @@ public abstract class Enemy : MonoBehaviour
 {
     public GameManager gm;
     public SpriteRenderer sr;
-    int health = 1; //Leaving hit function in case there are enemies with health > 1
+    protected int health = 1; //Leaving hit function in case there are enemies with health > 1
     //protected int pts;
     protected int pts;
 
