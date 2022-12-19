@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     public bool pauseGame = false;
     public int startingPlayerLives = 3;
     public int playerLives;
+    public float laserSpeed = 80f;
+    public int centipedeFollowFrames = 7;
     //Used for initial mushroom generation
     public int maxRowDensity = 10;
     //Used for initial centipede generation call. 

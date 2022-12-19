@@ -19,7 +19,7 @@ public class Centipede : Enemy
     Centipede nodeAhead;
     [SerializeField]
     Centipede nodeBehind;
-    public int followFrames = 7;
+    int centipedeFollowFrames; //get from GameManager
     [SerializeField]
     public List<Vector2> followQueue;
 
@@ -43,6 +43,7 @@ public class Centipede : Enemy
     //Called in Enemy.cs Start()
     override protected void LocalStart()
     {   
+        centipedeFollowFrames = gm.centipedeFollowFrames;
         isHead = false;
         SpriteGeneration();
     }
@@ -105,7 +106,7 @@ public class Centipede : Enemy
     void Follow()
     {
         //get node ahead's transform 
-        if (followQueue.Count >= followFrames)
+        if (followQueue.Count >= centipedeFollowFrames)
         {
             transform.position = followQueue[0];
             followQueue.RemoveAt(0);

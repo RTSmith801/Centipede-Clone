@@ -12,7 +12,7 @@ public class Laser : MonoBehaviour
 {
     GameManager gm;
     Rigidbody2D rb;
-    float laserSpeed = 100f;
+    float laserSpeed; //get laser speed from game manager
 
     private void Awake()
     {
@@ -22,6 +22,7 @@ public class Laser : MonoBehaviour
     
     void Start()
     {
+        laserSpeed = gm.laserSpeed;
         //Movement called once
         Movement();
         //Laser sound called here
