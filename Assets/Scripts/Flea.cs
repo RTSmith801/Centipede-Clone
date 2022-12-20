@@ -20,7 +20,7 @@ public class Flea : Enemy
         transform.position = transform.position + Vector3.down * moveSpeed;
 
         if (transform.position.y < -1)
-            Die(0);
+            Destroy(gameObject); //removes flee without calling die *prevents instantiate points
 
         if (transform.position.y < yTarget && transform.position.y > 1)
         {
@@ -38,10 +38,14 @@ public class Flea : Enemy
         pts = 200;
         health = 2;
         yTarget = transform.position.y - 1;
+        gm.am.Play("falling");
     }
 
 	protected override void LocalDeath()
 	{
         gm.SpawnFlea();
-	}
+        gm.am.Play("boom2");
+        Instantiate(gm.points, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
+    }
 }
+

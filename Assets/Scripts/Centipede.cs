@@ -8,7 +8,7 @@ public class Centipede : Enemy
     [SerializeField]
     public bool isHead = false;    
     bool movingRight = true;
-    public float moveSpeed = 5f;
+    float moveSpeed;
     Vector2 castDirection = Vector2.right;
     [SerializeField]
     MoveState moveState = MoveState.lateral_descend;
@@ -44,6 +44,7 @@ public class Centipede : Enemy
     override protected void LocalStart()
     {   
         centipedeFollowFrames = gm.centipedeFollowFrames;
+        moveSpeed = gm.centipedeMoveSpeed;
         isHead = false;
         SpriteGeneration();
     }

@@ -54,8 +54,8 @@ public class Player : MonoBehaviour
         if (!gm.pauseGame)
         {
             //Player movement
-            PlayerMoveKeyboard();
-            //PlayerMoveMouse();
+            //PlayerMoveKeyboard();
+            PlayerMoveMouse();
             if (Input.GetButton("Fire1"))
             {
                 FireLaser();

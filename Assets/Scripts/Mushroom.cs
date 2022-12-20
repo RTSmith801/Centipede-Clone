@@ -52,6 +52,9 @@ public class Mushroom : MonoBehaviour
         else if (health == 3) { spriteNum = 1; }
         else if (health == 2) { spriteNum = 2; }
         else if (health == 1) { spriteNum = 3; }
-        sr.sprite = mushroomSpriteAtalas.Single(s => s.name == "Mushroom_" + spriteNum);
+        if (sr.sprite)
+        {
+            sr.sprite = mushroomSpriteAtalas.Single(s => s.name == "Mushroom_" + spriteNum);
+        }
     }
 }

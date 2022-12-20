@@ -38,9 +38,10 @@ public class GameManager : MonoBehaviour
     public int startingPlayerLives = 3;
     public int playerLives;
     public float laserSpeed = 80f;
-    public int centipedeFollowFrames = 7;
+    public int centipedeFollowFrames = 10;
+    public float centipedeMoveSpeed = 10f;
     //Used for initial mushroom generation
-    public int maxRowDensity = 10;
+    public int maxRowDensity = 3;
     //Used for initial centipede generation call. 
     public int startingCentipedeGenerationCount = 10;
     //Incremented everytime all centipedes are destroyed
@@ -48,8 +49,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     List<Centipede> centipedeLivingList; //total
     // Flea / other enemy related variables
-    float fleaTimeMin = 10f;
-    float fleaTimeMax = 30f;
+    float fleaTimeMin = 5f;
+    float fleaTimeMax = 15f;
     float fleaSpawnTimer;
 
 
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
     GameObject flea;
     GameObject player;
     public GameObject playerExplosion;
+    public GameObject points;
 
     //Required in Unity Scene
     [Header("Audio Manager")]
@@ -72,6 +74,8 @@ public class GameManager : MonoBehaviour
     public float movementBoundaryX; //create accessor for this 
     public float movementBoundaryY; //create accessor for this 
     TextMeshProUGUI scoreboard;
+    TextMeshProUGUI highscoreUI;
+    GameObject[] playerLivesUI;
     public Camera mainCam;
 
     private void Awake()
@@ -88,6 +92,7 @@ public class GameManager : MonoBehaviour
         flea = Resources.Load("Prefabs/Flea") as GameObject;
 		player = Resources.Load("Prefabs/Player") as GameObject;
         playerExplosion = Resources.Load("Prefabs/PlayerExplosion") as GameObject;
+        points = Resources.Load("Prefabs/Points") as GameObject;
     }
 
     void BuildReferences()
@@ -96,6 +101,9 @@ public class GameManager : MonoBehaviour
         arena = GameObject.FindWithTag("arena");
         movementBoundary = GameObject.FindWithTag("movement boundary");
         scoreboard = GameObject.FindWithTag("scoreboard").GetComponent<TextMeshProUGUI>();
+        highscoreUI = GameObject.FindWithTag("highscore").GetComponent<TextMeshProUGUI>();
+        playerLivesUI = new GameObject[5];
+        playerLivesUI = GameObject.FindGameObjectsWithTag("lives");
         mainCam = GameObject.FindObjectOfType<Camera>();
     }
     
@@ -129,7 +137,7 @@ public class GameManager : MonoBehaviour
         //for (int i = 4; i <= arena.transform.localScale.y; i++)
         for (int i = (int)arena.transform.localScale.y; i > 3; i--)
         {
-            int rowDensity = Random.Range(1, maxRowDensity + 1);
+            int rowDensity = Random.Range(0, maxRowDensity + 1);
             List<int> density = new List<int>();
             while (density.Count < rowDensity)
             {
@@ -160,8 +168,12 @@ public class GameManager : MonoBehaviour
         //Despawn enemies (centipedes)
         for (int i = centipedeLivingList.Count - 1; i >= 0; i--)
         {
-            Destroy(centipedeLivingList[i].transform.gameObject);
-            yield return new WaitForSeconds(centipedeDespawnTime);
+            //Prevents crash if centipede dies before being removed from list.
+            if (centipedeLivingList[i])
+            {
+                Destroy(centipedeLivingList[i].transform.gameObject);
+                yield return new WaitForSeconds(centipedeDespawnTime);
+            }
         }
 
 		// Despawn enemies (everything else)
@@ -252,7 +264,21 @@ public class GameManager : MonoBehaviour
             highScore = score;
             highScoreReached = true;
         }
-        scoreboard.text = "LIVES " + playerLives + "\nWAVE " + centipedeWave + "\nSCORE " + score + "\nHIGH SCORE " + highScore; 
+        scoreboard.text = "" + score;
+        highscoreUI.text = "" + highScore;
+        foreach(GameObject lives in playerLivesUI)
+        {
+            lives.SetActive(false);
+        }
+        //Logic not finished 
+        //UI placement is currently hardcoded.
+        for(int i = 0; i <= playerLives; i++)
+        {  
+            if (playerLivesUI[i].name == "LifeUI" + i)
+            {
+                playerLivesUI[i].SetActive(true);
+            }
+        }
     }
 
     public void DecrementCentipedeList(GameObject c)
@@ -275,6 +301,7 @@ public class GameManager : MonoBehaviour
             am.Play("boom1");
             am.Play("playerdeath");
             playerLives-= 1;
+            scoreUpdate(0);
             if (playerLives >= 0)
             {
                 StopAllCoroutines();
@@ -296,7 +323,6 @@ public class GameManager : MonoBehaviour
         {
             //Set High Score
             //Flash High Score - To do
-            scoreboard.text = "\nWAVE " + centipedeWave + "\nNEW HIGH SCORE " + highScore + "\nGAME OVER";
             PlayerPrefs.SetInt("highScore", highScore);
         }
 
@@ -311,7 +337,7 @@ public class GameManager : MonoBehaviour
      
         fleaSpawnTimer = Random.Range(fleaTimeMin, fleaTimeMax);
 		print("SpawnFlea() called with a timer of " + fleaSpawnTimer);
-
+        StopCoroutine(SpawnFleaCoroutine());
         StartCoroutine(SpawnFleaCoroutine());
     }
 

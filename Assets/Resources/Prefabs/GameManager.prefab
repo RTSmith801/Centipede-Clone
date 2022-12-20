@@ -57,13 +57,17 @@ MonoBehaviour:
   pauseGame: 0
   startingPlayerLives: 3
   playerLives: 0
-  maxRowDensity: 10
+  laserSpeed: 80
+  centipedeFollowFrames: 10
+  centipedeMoveSpeed: 10
+  maxRowDensity: 3
   startingCentipedeGenerationCount: 10
   centipedeLivingList: []
   laserExists: 0
   laser: {fileID: 0}
   mushroom: {fileID: 0}
   playerExplosion: {fileID: 0}
+  points: {fileID: 0}
   am: {fileID: 0}
   arena: {fileID: 0}
   movementBoundary: {fileID: 0}

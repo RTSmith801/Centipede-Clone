@@ -10,6 +10,8 @@ TagManager:
   - scoreboard
   - enemy
   - centipede
+  - highscore
+  - lives
   layers:
   - Default
   - TransparentFX
