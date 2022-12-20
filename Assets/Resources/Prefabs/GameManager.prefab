@@ -55,7 +55,7 @@ MonoBehaviour:
   playerExplosionTime: 0.025
   gameOver: 0
   pauseGame: 0
-  startingPlayerLives: 3
+  startingPlayerLives: 2
   playerLives: 0
   laserSpeed: 80
   centipedeFollowFrames: 10

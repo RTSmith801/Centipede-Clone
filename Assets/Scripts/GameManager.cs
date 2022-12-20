@@ -266,17 +266,19 @@ public class GameManager : MonoBehaviour
         }
         scoreboard.text = "" + score;
         highscoreUI.text = "" + highScore;
-        foreach(GameObject lives in playerLivesUI)
-        {
-            lives.SetActive(false);
-        }
-        //Logic not finished 
         //UI placement is currently hardcoded.
-        for(int i = 0; i <= playerLives; i++)
-        {  
-            if (playerLivesUI[i].name == "LifeUI" + i)
+        for(int i = 0; i < 5; i++)
+        {
+            if (playerLivesUI[i])
             {
-                playerLivesUI[i].SetActive(true);
+                if (int.Parse(playerLivesUI[i].name) <= playerLives)
+                {
+                    playerLivesUI[i].SetActive(true);
+                }
+                else
+                {
+                    playerLivesUI[i].SetActive(false);
+                }
             }
         }
     }
