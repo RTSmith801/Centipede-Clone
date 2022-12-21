@@ -339,8 +339,8 @@ public class GameManager : MonoBehaviour
      
         fleaSpawnTimer = Random.Range(fleaTimeMin, fleaTimeMax);
 		print("SpawnFlea() called with a timer of " + fleaSpawnTimer);
-        StopCoroutine(SpawnFleaCoroutine());
-        StartCoroutine(SpawnFleaCoroutine());
+        StopCoroutine("SpawnFleaCoroutine");
+        StartCoroutine("SpawnFleaCoroutine");
     }
 
     private IEnumerator SpawnFleaCoroutine()
