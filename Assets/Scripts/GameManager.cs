@@ -48,10 +48,7 @@ public class GameManager : MonoBehaviour
     int centipedeGenerationCount;
     [SerializeField]
     List<Centipede> centipedeLivingList; //total
-    // Flea / other enemy related variables
-    float fleaTimeMin = 5f;
-    float fleaTimeMax = 15f;
-    float fleaSpawnTimer;
+
 
 
     //used for FireLaser()
@@ -78,7 +75,17 @@ public class GameManager : MonoBehaviour
     GameObject[] playerLivesUI;
     public Camera mainCam;
 
-    private void Awake()
+	// Flea / other enemy related variables
+	float fleaTimeMin = 5f;
+	float fleaTimeMax = 15f;
+	float fleaSpawnTimer;
+	public float spiderMoveSpeed = .15f;
+    public float spiderTopBoundary;
+	public float spiderBottomBoundary;
+	public float spiderTimerMin = .25f;
+	public float spiderTimerMax = .75f;
+
+	private void Awake()
     {
         LoadPrefabs();
         BuildReferences();
@@ -129,6 +136,10 @@ public class GameManager : MonoBehaviour
         movementBoundaryY = arena.transform.localScale.y * movementBoundaryScale;
         movementBoundary.transform.localScale = new Vector3(1, movementBoundaryScale, 1);
         movementBoundary.transform.position = new Vector3(0, 0, 0);
+
+        // Spider Boundaries
+        spiderBottomBoundary = 0;
+        spiderTopBoundary = arena.transform.localScale.y * .4f;
     }
 
     //Builds arena then starts game

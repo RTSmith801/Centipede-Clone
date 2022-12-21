@@ -74,3 +74,8 @@ MonoBehaviour:
   movementBoundaryX: 0
   movementBoundaryY: 0
   mainCam: {fileID: 0}
+  spiderMoveSpeed: 0.15
+  spiderTopBoundary: 0
+  spiderBottomBoundary: 0
+  spiderTimerMin: 0.25
+  spiderTimerMax: 0.75
