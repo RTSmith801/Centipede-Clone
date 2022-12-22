@@ -29,6 +29,7 @@ public class Scorpion : Enemy
     {
         moveSpeed = gm.scorpionMoveSpeed;
 		isLeftScorpion = transform.position.x <= 0 ? true : false;
+        pts = 1000;
 
         if (isLeftScorpion)
             transform.localScale = new Vector3 (-1,1,1);
@@ -36,6 +37,14 @@ public class Scorpion : Enemy
 
 	protected override void LocalDeath()
 	{
-		throw new System.NotImplementedException();
+		gm.am.Play("boom2");
+		gm.SpawnScorpion();
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+        if (collision.tag == "mushroom")
+            collision.GetComponent<Mushroom>().Poison();
+
 	}
 }

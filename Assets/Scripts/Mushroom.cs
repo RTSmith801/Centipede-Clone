@@ -7,6 +7,7 @@ public class Mushroom : MonoBehaviour
 {
     public int health = 4;
     public int pts = 1;
+    public bool isPoisoned { get; private set; }
 
     GameManager gm;
     SpriteRenderer sr;
@@ -38,6 +39,13 @@ public class Mushroom : MonoBehaviour
             gm.am.Play("boop");
             Destroy(gameObject);            
         }
+    }
+
+    public void Poison()
+    {
+        isPoisoned = true;
+        sr.color = Color.blue;
+        // change what it looks like
     }
 
     public void Hit()
