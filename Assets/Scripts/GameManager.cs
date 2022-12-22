@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
     GameObject centipede;
     GameObject flea;
     GameObject spider;
+    GameObject scorpion;
     GameObject player;
     public GameObject playerExplosion;
     public GameObject points300;
@@ -86,6 +87,12 @@ public class GameManager : MonoBehaviour
     float spiderSpawnTimeMin = 2f;
     float spiderSpawnTimeMax = 8f;
     float spiderSpawnTimer;
+    float scorpionSpawnTimeMin = 2f;
+    float scorpionSpawnTimeMax = 8f;
+    float scorpionSpawnTimer;
+    public float scorpionMoveSpeed = .15f;
+    public float scorpionTopBoundary;
+    public float scorpionBottomBoundary;
 	public float spiderMoveSpeed = .15f;
     public float spiderTopBoundary;
 	public float spiderBottomBoundary;
@@ -105,6 +112,7 @@ public class GameManager : MonoBehaviour
         centipede = Resources.Load("Prefabs/Centipede") as GameObject;
         flea = Resources.Load("Prefabs/Flea") as GameObject;
         spider = Resources.Load("Prefabs/Spider") as GameObject;
+        scorpion = Resources.Load("Prefabs/Scorpion") as GameObject;
 		player = Resources.Load("Prefabs/Player") as GameObject;
         playerExplosion = Resources.Load("Prefabs/PlayerExplosion") as GameObject;
         points300 = Resources.Load("Prefabs/Points300") as GameObject;
@@ -150,6 +158,10 @@ public class GameManager : MonoBehaviour
         // Spider Boundaries
         spiderBottomBoundary = 0;
         spiderTopBoundary = arena.transform.localScale.y * .4f;
+
+        // Scorpion Boundaries
+        scorpionBottomBoundary = 20;
+        scorpionTopBoundary = arena.transform.localScale.y - 1;
     }
 
     //Builds arena then starts game
@@ -232,6 +244,15 @@ public class GameManager : MonoBehaviour
 
 		return new Vector2(xPos, yPos);
 	}
+
+	Vector2 GetScorpionInstantiationPoint()
+	{
+		// Fifty. Fifty. Left or right. 
+		float xPos = Random.Range(0, 100) >= 50 ? -2 : movementBoundaryX;
+		float yPos = Random.Range(scorpionBottomBoundary, scorpionTopBoundary);
+
+		return new Vector2(xPos, yPos);
+	}
 	Vector2 GetEnemyInstantiationPointTop()
     {
 		int rand = Random.Range(1, (int)movementBoundaryX);
@@ -282,6 +303,7 @@ public class GameManager : MonoBehaviour
 			SpawnFlea();
 
 		SpawnSpider();
+        SpawnScorpion();
 
 	}
 
@@ -392,5 +414,20 @@ public class GameManager : MonoBehaviour
 
 		Vector2 instantionPoint = GetSpiderInstantiationPoint();
 		Instantiate(spider, instantionPoint, Quaternion.identity);
+	}
+
+	public void SpawnScorpion()
+	{
+		spiderSpawnTimer = Random.Range(scorpionSpawnTimeMin, scorpionSpawnTimeMax);
+		StopCoroutine("SpawnScorpionCoroutine");
+		StartCoroutine("SpawnScorpionCoroutine");
+	}
+
+	private IEnumerator SpawnScorpionCoroutine()
+	{
+		yield return new WaitForSeconds(spiderSpawnTimer);
+
+		Vector2 instantionPoint = GetScorpionInstantiationPoint();
+		Instantiate(scorpion, instantionPoint, Quaternion.identity);
 	}
 }
