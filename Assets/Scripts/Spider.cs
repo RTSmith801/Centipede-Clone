@@ -24,16 +24,10 @@ public class Spider : Enemy
     }
     override protected void Move()
     {
-		// if timer expires, or boundary hit, change direction (probably need a check to make sure it's a "new" direction or something
-
-
-
+		// if timer expires, or boundary hit, change direction
 		if (moveTimer <= 0 || transform.position.y <= bottomBoundary || transform.position.y >= topBoundary)
 		{
 			ChangeDirections();
-			print("y: " + transform.position.y);
-			print("bottom boundary: " + bottomBoundary);
-			print("top boundary: " + topBoundary);
 		}
 
 		// Actually moves
@@ -79,7 +73,6 @@ public class Spider : Enemy
 	void ChangeDirections()
 	{
 		moveTimer = Random.Range(moveTimerMin, moveTimerMax);
-		print("new timer: " + moveTimer);
 
 		List<MoveStateDirection> possibleDirections = new List<MoveStateDirection>();
 
@@ -113,8 +106,8 @@ public class Spider : Enemy
         moveSpeed = gm.spiderMoveSpeed;
 		topBoundary= gm.spiderTopBoundary;
 		bottomBoundary= gm.spiderBottomBoundary;
-		moveTimerMin = gm.spiderTimerMin;
-		moveTimerMax = gm.spiderTimerMax;
+		moveTimerMin = gm.spiderMoveTimerMin;
+		moveTimerMax = gm.spiderMoveTimerMax;
 
 		moveTimer = Random.Range(moveTimerMin, moveTimerMax);
 
@@ -125,22 +118,28 @@ public class Spider : Enemy
 
 
 
-		// Fifty. Fifty. Left or right. MOVE THIS TO GM
-		//if (Random.Range(0, 100) >= 50)
-		//{
-
-		//}
-		//else
-		//{
-
-		//}
-
-
 	}
 
-
-protected override void LocalDeath()
+	protected override void LocalDeath()
 	{
-		throw new System.NotImplementedException();
+
+		Player player = FindObjectOfType<Player>();
+		float verticalDistanceFromPlayer = transform.position.y - player.transform.position.y;
+
+		switch (verticalDistanceFromPlayer)
+		{
+			case < 5:
+				pts = 900;
+				break;
+			case < 10:
+				pts = 600;
+				break;
+			default:
+				pts = 300;
+				break;
+		}
+
+		gm.am.Play("boom2");
+		gm.SpawnSpider();
 	}
 }

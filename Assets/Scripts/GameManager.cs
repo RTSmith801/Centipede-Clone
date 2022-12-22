@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
     public GameObject mushroom;
     GameObject centipede;
     GameObject flea;
+    GameObject spider;
     GameObject player;
     public GameObject playerExplosion;
     public GameObject points;
@@ -79,11 +80,14 @@ public class GameManager : MonoBehaviour
 	float fleaTimeMin = 5f;
 	float fleaTimeMax = 15f;
 	float fleaSpawnTimer;
+    float spiderSpawnTimeMin = 5f;
+    float spiderSpawnTimeMax = 15f;
+    float spiderSpawnTimer;
 	public float spiderMoveSpeed = .15f;
     public float spiderTopBoundary;
 	public float spiderBottomBoundary;
-	public float spiderTimerMin = .25f;
-	public float spiderTimerMax = .75f;
+	public float spiderMoveTimerMin = .25f;
+	public float spiderMoveTimerMax = .75f;
 
 	private void Awake()
     {
@@ -97,6 +101,7 @@ public class GameManager : MonoBehaviour
         mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
         centipede = Resources.Load("Prefabs/Centipede") as GameObject;
         flea = Resources.Load("Prefabs/Flea") as GameObject;
+        spider = Resources.Load("Prefabs/Spider") as GameObject;
 		player = Resources.Load("Prefabs/Player") as GameObject;
         playerExplosion = Resources.Load("Prefabs/PlayerExplosion") as GameObject;
         points = Resources.Load("Prefabs/Points") as GameObject;
@@ -214,13 +219,19 @@ public class GameManager : MonoBehaviour
 
     }
 
+	Vector2 GetSpiderInstantiationPoint()
+	{
+		// Fifty. Fifty. Left or right. 
+		float xPos = Random.Range(0, 100) >= 50 ? -2 : movementBoundaryX;
+        float yPos = Random.Range(spiderBottomBoundary, spiderTopBoundary);
 
-    Vector2 GetEnemyInstantiationPointTop()
+		return new Vector2(xPos, yPos);
+	}
+	Vector2 GetEnemyInstantiationPointTop()
     {
 		int rand = Random.Range(1, (int)movementBoundaryX);
-		Vector2 instantionPoint = new Vector2(rand, arena.transform.localPosition.y + 39);
 
-        return instantionPoint;
+		return new Vector2(rand, arena.transform.localPosition.y + 39);
 	}
 
     //Instantiaion point needs to be randomized here
@@ -264,6 +275,7 @@ public class GameManager : MonoBehaviour
 		if (centipedeWave >= 2)
 		{
 			SpawnFlea();
+            SpawnSpider();
 		}
 	}
 
@@ -362,5 +374,23 @@ public class GameManager : MonoBehaviour
 
 		Vector2 instantionPoint = GetEnemyInstantiationPointTop();
         Instantiate(flea, instantionPoint, Quaternion.identity);
+	}
+
+	public void SpawnSpider()
+	{
+		spiderSpawnTimer = Random.Range(spiderSpawnTimeMin, spiderSpawnTimeMax);
+		print("SpawnSpider() called with a timer of " + spiderSpawnTimer);
+		StopCoroutine("SpawnSpiderCoroutine");
+		StartCoroutine("SpawnSpiderCoroutine");
+	}
+
+	private IEnumerator SpawnSpiderCoroutine()
+	{
+		yield return new WaitForSeconds(spiderSpawnTimer);
+
+		print("SpawnSpiderCoroutine running now");
+
+		Vector2 instantionPoint = GetEnemyInstantiationPointTop();
+		Instantiate(spider, instantionPoint, Quaternion.identity);
 	}
 }

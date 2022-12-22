@@ -367,14 +367,6 @@ public class Centipede : Enemy
 
     public override void Hit()
     {
-        if (isHead)
-        {
-            pts = 100;
-        }
-        else
-        {
-            pts = 10;
-        }
 
         if (nodeBehind)
         {
@@ -385,11 +377,11 @@ public class Centipede : Enemy
 
         gm.am.Play("boom2");
         gm.DecrementCentipedeList(this.gameObject);
-        Die(pts);
+        Die();
     }
 
 	protected override void LocalDeath()
 	{
-
+		pts = isHead ? 100 : 10;
 	}
 }

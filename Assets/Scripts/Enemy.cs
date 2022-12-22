@@ -47,11 +47,11 @@ public abstract class Enemy : MonoBehaviour
 
         if (health <= 0)
         {
-            Die(pts);
+            Die();
         }
     }
 
-    protected void Die(int pts)
+    protected void Die()
     {
         LocalDeath();
         gm.scoreUpdate(pts);
