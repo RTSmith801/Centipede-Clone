@@ -126,20 +126,26 @@ public class Spider : Enemy
 		Player player = FindObjectOfType<Player>();
 		float verticalDistanceFromPlayer = transform.position.y - player.transform.position.y;
 
+		GameObject pointsText = null;
 		switch (verticalDistanceFromPlayer)
 		{
-			case < 5:
+			case < 3:
 				pts = 900;
+				pointsText = gm.points900;
 				break;
-			case < 10:
+			case < 7:
 				pts = 600;
+				pointsText = gm.points600;
 				break;
 			default:
 				pts = 300;
+				pointsText = gm.points300;
 				break;
 		}
 
 		gm.am.Play("boom2");
 		gm.SpawnSpider();
+		
+		Instantiate(pointsText, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
 	}
 }

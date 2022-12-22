@@ -62,10 +62,13 @@ public class GameManager : MonoBehaviour
     GameObject spider;
     GameObject player;
     public GameObject playerExplosion;
-    public GameObject points;
+    public GameObject points300;
+	public GameObject points600;
+	public GameObject points900;
 
-    //Required in Unity Scene
-    [Header("Audio Manager")]
+
+	//Required in Unity Scene
+	[Header("Audio Manager")]
     public AudioManager am; //Is public so AudioManager can be called by through GameManager.
     public GameObject arena; //Create accessor for this 
     public GameObject movementBoundary; //create accessor for this 
@@ -77,11 +80,11 @@ public class GameManager : MonoBehaviour
     public Camera mainCam;
 
 	// Flea / other enemy related variables
-	float fleaTimeMin = 5f;
-	float fleaTimeMax = 15f;
+	float fleaTimeMin = 3f;
+	float fleaTimeMax = 10f;
 	float fleaSpawnTimer;
-    float spiderSpawnTimeMin = 5f;
-    float spiderSpawnTimeMax = 15f;
+    float spiderSpawnTimeMin = 2f;
+    float spiderSpawnTimeMax = 8f;
     float spiderSpawnTimer;
 	public float spiderMoveSpeed = .15f;
     public float spiderTopBoundary;
@@ -104,8 +107,10 @@ public class GameManager : MonoBehaviour
         spider = Resources.Load("Prefabs/Spider") as GameObject;
 		player = Resources.Load("Prefabs/Player") as GameObject;
         playerExplosion = Resources.Load("Prefabs/PlayerExplosion") as GameObject;
-        points = Resources.Load("Prefabs/Points") as GameObject;
-    }
+        points300 = Resources.Load("Prefabs/Points300") as GameObject;
+		points600 = Resources.Load("Prefabs/Points600") as GameObject;
+		points900 = Resources.Load("Prefabs/Points900") as GameObject;
+	}
 
     void BuildReferences()
     {
@@ -271,12 +276,13 @@ public class GameManager : MonoBehaviour
             centipedeSpawnList[i].Initialized(a, b);
         }
 
+
 		// Spawn Fleas
 		if (centipedeWave >= 2)
-		{
 			SpawnFlea();
-            SpawnSpider();
-		}
+
+		SpawnSpider();
+
 	}
 
     public void scoreUpdate(int pts)
@@ -390,7 +396,7 @@ public class GameManager : MonoBehaviour
 
 		print("SpawnSpiderCoroutine running now");
 
-		Vector2 instantionPoint = GetEnemyInstantiationPointTop();
+		Vector2 instantionPoint = GetSpiderInstantiationPoint();
 		Instantiate(spider, instantionPoint, Quaternion.identity);
 	}
 }

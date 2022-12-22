@@ -45,7 +45,7 @@ public class Flea : Enemy
 	{
         gm.SpawnFlea();
         gm.am.Play("boom2");
-        Instantiate(gm.points, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
+        Instantiate(gm.points300, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
     }
 }
 
