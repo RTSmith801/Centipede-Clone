@@ -64,6 +64,7 @@ public class Spider : Enemy
 		// Check if off screen, if so despawn
 		if ((isLeftSpider && transform.position.x >= gm.movementBoundaryX) || (!isLeftSpider && transform.position.x <= -2))
 		{
+			gm.SpawnSpider();
 			Destroy(gameObject);
 		}
 
@@ -117,7 +118,6 @@ public class Spider : Enemy
 		moveState = isLeftSpider ? (MoveStateDirection)Random.Range(1, 4) : (MoveStateDirection)Random.Range(5, 8);
 
 
-
 	}
 
 	protected override void LocalDeath()
@@ -147,5 +147,13 @@ public class Spider : Enemy
 		gm.SpawnSpider();
 		
 		Instantiate(pointsText, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.tag == "mushroom")
+		{
+			Destroy(collision.gameObject);
+		}
 	}
 }

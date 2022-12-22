@@ -80,8 +80,8 @@ public class GameManager : MonoBehaviour
     public Camera mainCam;
 
 	// Flea / other enemy related variables
-	float fleaTimeMin = 3f;
-	float fleaTimeMax = 10f;
+	float fleaTimeMin = 0f;
+	float fleaTimeMax = 8f;
 	float fleaSpawnTimer;
     float spiderSpawnTimeMin = 2f;
     float spiderSpawnTimeMax = 8f;
@@ -367,7 +367,6 @@ public class GameManager : MonoBehaviour
     {
      
         fleaSpawnTimer = Random.Range(fleaTimeMin, fleaTimeMax);
-		print("SpawnFlea() called with a timer of " + fleaSpawnTimer);
         StopCoroutine("SpawnFleaCoroutine");
         StartCoroutine("SpawnFleaCoroutine");
     }
@@ -376,8 +375,6 @@ public class GameManager : MonoBehaviour
     {
 		yield return new WaitForSeconds(fleaSpawnTimer);
 
-        print("SpawnFleaCoroutine running now");
-
 		Vector2 instantionPoint = GetEnemyInstantiationPointTop();
         Instantiate(flea, instantionPoint, Quaternion.identity);
 	}
@@ -385,7 +382,6 @@ public class GameManager : MonoBehaviour
 	public void SpawnSpider()
 	{
 		spiderSpawnTimer = Random.Range(spiderSpawnTimeMin, spiderSpawnTimeMax);
-		print("SpawnSpider() called with a timer of " + spiderSpawnTimer);
 		StopCoroutine("SpawnSpiderCoroutine");
 		StartCoroutine("SpawnSpiderCoroutine");
 	}
@@ -393,8 +389,6 @@ public class GameManager : MonoBehaviour
 	private IEnumerator SpawnSpiderCoroutine()
 	{
 		yield return new WaitForSeconds(spiderSpawnTimer);
-
-		print("SpawnSpiderCoroutine running now");
 
 		Vector2 instantionPoint = GetSpiderInstantiationPoint();
 		Instantiate(spider, instantionPoint, Quaternion.identity);

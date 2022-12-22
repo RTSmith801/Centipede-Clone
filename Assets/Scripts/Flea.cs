@@ -5,8 +5,7 @@ using UnityEngine;
 public class Flea : Enemy
 {
     public float moveSpeed = .15f;
-    [SerializeField]
-    private float mushroomSpawnChance = .15f;
+    private float mushroomSpawnChance = .4f;
 
     float yTarget;
 
@@ -20,7 +19,11 @@ public class Flea : Enemy
         transform.position = transform.position + Vector3.down * moveSpeed;
 
         if (transform.position.y < -1)
-            Destroy(gameObject); //removes flee without calling die *prevents instantiate points
+        {
+			gm.SpawnFlea();
+			Destroy(gameObject); //removes flee without calling die *prevents instantiate points
+		}
+
 
         if (transform.position.y < yTarget && transform.position.y > 1)
         {
