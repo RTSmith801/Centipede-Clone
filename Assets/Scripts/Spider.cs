@@ -12,8 +12,9 @@ public class Spider : Enemy
 	float moveTimerMin;
 	float moveTimerMax;
 	bool isLeftSpider;
+    float movementSoundTimer = .25f;
 
-	public enum MoveStateDirection { up, upright, right, downright, down, downleft, left, upleft };
+    public enum MoveStateDirection { up, upright, right, downright, down, downleft, left, upleft };
 	// public enum MoveStateDirection { up=0, upright=1, right=2, downright=3, down=4, downleft=5, left=6, upleft=7 };
 	MoveStateDirection moveState;
 
@@ -116,9 +117,9 @@ public class Spider : Enemy
 		// Set the spider direction and moveState based on spawn location
 		isLeftSpider = transform.position.x <= 0 ? true : false;
 		moveState = isLeftSpider ? (MoveStateDirection)Random.Range(1, 4) : (MoveStateDirection)Random.Range(5, 8);
+        StartCoroutine("MovementSound");
 
-
-	}
+    }
 
 	protected override void LocalDeath()
 	{
@@ -156,4 +157,13 @@ public class Spider : Enemy
 			Destroy(collision.gameObject);
 		}
 	}
+
+    private IEnumerator MovementSound()
+    {
+        while (gameObject && !gm.pauseGame)
+        {
+            gm.am.Play("spidermove");
+            yield return new WaitForSeconds(movementSoundTimer);
+        }
+    }
 }

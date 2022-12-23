@@ -6,6 +6,7 @@ public class Scorpion : Enemy
 {
     bool isLeftScorpion;
     float moveSpeed;
+    float movementSoundTimer = .25f;
 
     // Update is called once per frame
     void Update()
@@ -17,7 +18,6 @@ public class Scorpion : Enemy
         Vector3 moveDir = isLeftScorpion ? Vector3.right : Vector3.left;
 
         transform.position = transform.position + (moveDir * moveSpeed);
-
         // Check if needs to despawn
         if ((isLeftScorpion && transform.position.x > gm.movementBoundaryX + 2) || (!isLeftScorpion && transform.position.x < -2)) 
         {
@@ -33,7 +33,8 @@ public class Scorpion : Enemy
 
         if (isLeftScorpion)
             transform.localScale = new Vector3 (-1,1,1);
-	}
+        StartCoroutine("MovementSound");
+    }
 
 	protected override void LocalDeath()
 	{
@@ -51,4 +52,13 @@ public class Scorpion : Enemy
             collision.GetComponent<Mushroom>().Poison();
 
 	}
+
+    private IEnumerator MovementSound()
+    {
+        while (gameObject && !gm.pauseGame)
+        {
+            gm.am.Play("scorpionmove");
+            yield return new WaitForSeconds(movementSoundTimer);
+        }
+    }
 }

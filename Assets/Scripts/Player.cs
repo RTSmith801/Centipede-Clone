@@ -30,7 +30,9 @@ public class Player : MonoBehaviour
     
     void Start()
     {
-        
+        //Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
@@ -80,8 +82,7 @@ public class Player : MonoBehaviour
     void PlayerMoveKeyboard()
     {
         if (Input.anyKeyDown)
-        {
-            //Cursor.lockState = CursorLockMode.None;
+        {   
             Cursor.visible = false;
         }
 
@@ -106,12 +107,11 @@ public class Player : MonoBehaviour
     //Player movement mouse
     void PlayerMoveMouse()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            print("locking cursor");
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    print("locking cursor");
+        //    Cursor.visible = false;
+        //}
         
         mousePos = gm.mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0f;

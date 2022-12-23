@@ -33,6 +33,8 @@ public class Centipede : Enemy
     string animatorTriggerName;
     Animator animator;
 
+    float movementSoundTimer = .25f;
+
     public enum MoveState { lateral_descend, descend, dive, ascend, lateral_ascend, follow };
     public enum MoveStateDirection { up, left, down, right };
 
@@ -48,6 +50,7 @@ public class Centipede : Enemy
         moveSpeed = gm.centipedeMoveSpeed;
         isHead = false;
         SpriteGeneration();
+        StartCoroutine("MovementSound");
     }
 
     // Update is called once per frame
@@ -433,4 +436,14 @@ public class Centipede : Enemy
 	{
 		pts = isHead ? 100 : 10;
 	}
+
+
+    private IEnumerator MovementSound()
+    {
+        while (gameObject && !gm.pauseGame)
+        {
+            gm.am.Play("centipedemove");
+            yield return new WaitForSeconds(movementSoundTimer);
+        }
+    }
 }
