@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ef3163d3730c9e940aa558d98f1e0d76
+guid: c5caafae9ea8e574a8311c9a3e2af842
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -121,6 +121,27 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
+        y: 48
+        width: 16
+        height: 16
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 076a54bab3cf1cf47944dea866d04e1b
+      internalID: -1834643874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Points_1
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 32
         width: 16
         height: 16
@@ -131,14 +152,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5fe28acfdafb39d468062377af9584e4
-      internalID: -658379560
+      spriteID: 685ac19671418854a8f113c4cd5c8734
+      internalID: -1926966369
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Points_1
+      name: Points_2
       rect:
         serializedVersion: 2
         x: 0
@@ -152,14 +173,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d4bc2846e524d3f499496c983d566a55
-      internalID: -1607443591
+      spriteID: 12fe7c99e7af66546ad3f35f2882b2bb
+      internalID: -1018228769
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Points_2
+      name: Points_3
       rect:
         serializedVersion: 2
         x: 0
@@ -173,8 +194,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6ed1ccc4a4001b048b47cc88f0ec5ccd
-      internalID: -564620237
+      spriteID: 27f1f48779b56074bb0eba5e6bc264ae
+      internalID: -41583316
       vertices: []
       indices: 
       edges: []
@@ -190,9 +211,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Points_1: -1607443591
-      Points_0: -658379560
-      Points_2: -564620237
+      Points_1: -1926966369
+      Points_3: -41583316
+      Points_0: -1834643874
+      Points_2: -1018228769
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

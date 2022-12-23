@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
     public GameObject points300;
 	public GameObject points600;
 	public GameObject points900;
+    public GameObject points1000;
 
 
 	//Required in Unity Scene
@@ -118,6 +119,7 @@ public class GameManager : MonoBehaviour
         points300 = Resources.Load("Prefabs/Points300") as GameObject;
 		points600 = Resources.Load("Prefabs/Points600") as GameObject;
 		points900 = Resources.Load("Prefabs/Points900") as GameObject;
+        points1000 = Resources.Load("Prefabs/Points1000") as GameObject;
 	}
 
     void BuildReferences()

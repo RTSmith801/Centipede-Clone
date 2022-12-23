@@ -37,9 +37,13 @@ public class Scorpion : Enemy
 
 	protected override void LocalDeath()
 	{
+        //move sprite if isLeftScorpion
+        int posAdjustment = isLeftScorpion ? 2 : 0;
+        Vector3 pos = new Vector3(Mathf.Round(transform.position.x) - posAdjustment, Mathf.Round(transform.position.y), 0);
+        Instantiate(gm.points1000, pos, Quaternion.identity);
 		gm.am.Play("boom2");
 		gm.SpawnScorpion();
-	}
+    }
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
