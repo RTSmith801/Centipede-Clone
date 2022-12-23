@@ -16,7 +16,7 @@ public class PlayerExplosion : MonoBehaviour
     private void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        sprites = Resources.LoadAll<Sprite>("Sprites & Texts/Player Explosion");
+        sprites = Resources.LoadAll<Sprite>("Sprites & Texts/Player Explosion Original");
         StartCoroutine(PlayerExplosionAnimation());
     }
     private IEnumerator PlayerExplosionAnimation()
