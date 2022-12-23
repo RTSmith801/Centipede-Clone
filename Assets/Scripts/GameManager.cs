@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     //Used for manually creating delays;
     public float centipedeDespawnTime = 0.1f;
-    public float arenaGenerationTime = 0.0001f;
+    public float arenaGenerationTime = 0.05f;
     public float gameOverTimer = 2f;
     public float playerExplosionTime = 0.05f;
 
@@ -185,8 +185,8 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        NewCentipedeWave();
         am.FadeinBGM("BGM1");
+        NewCentipedeWave();        
         pauseGame = false;
     }
 

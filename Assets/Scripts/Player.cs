@@ -30,9 +30,8 @@ public class Player : MonoBehaviour
     
     void Start()
     {
-        //Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-        //Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        
+        
     }
 
     // Update is called once per frame
@@ -107,12 +106,13 @@ public class Player : MonoBehaviour
     //Player movement mouse
     void PlayerMoveMouse()
     {
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    print("locking cursor");
-        //    Cursor.visible = false;
-        //}
-        
+        if (Input.GetMouseButtonDown(1))
+        {
+            Cursor.visible = false;
+
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+
         mousePos = gm.mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0f;
         transform.position = mousePos;

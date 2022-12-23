@@ -50,7 +50,7 @@ MonoBehaviour:
   highScoreReached: 0
   centipedeWave: 0
   centipedeDespawnTime: 0.1
-  arenaGenerationTime: 0.0001
+  arenaGenerationTime: 0.05
   gameOverTimer: 2
   playerExplosionTime: 0.05
   gameOver: 0
