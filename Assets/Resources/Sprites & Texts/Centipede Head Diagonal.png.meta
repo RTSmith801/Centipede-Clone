@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c5caafae9ea8e574a8311c9a3e2af842
+guid: f377ebb6574b97f48a39f0b602bce9d3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Points_0
+      name: Centipede Head Diagonal_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 48
-        width: 16
-        height: 16
+        y: 24
+        width: 8
+        height: 8
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,41 +131,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 076a54bab3cf1cf47944dea866d04e1b
-      internalID: -1834643874
+      spriteID: 97cdbd5e1a7e38643829d58370578a2b
+      internalID: -445846836
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Points_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 32
-        width: 16
-        height: 16
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 685ac19671418854a8f113c4cd5c8734
-      internalID: -1926966369
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Points_2
+      name: Centipede Head Diagonal_1
       rect:
         serializedVersion: 2
         x: 0
         y: 16
-        width: 16
-        height: 16
+        width: 8
+        height: 8
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,20 +152,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 12fe7c99e7af66546ad3f35f2882b2bb
-      internalID: -1018228769
+      spriteID: d861cd57e65245842a513e762cd18e7d
+      internalID: -1683296857
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Points_3
+      name: Centipede Head Diagonal_2
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 16
-        height: 16
+        y: 8
+        width: 8
+        height: 8
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,8 +173,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27f1f48779b56074bb0eba5e6bc264ae
-      internalID: -41583316
+      spriteID: 159945703959ee64bbe80e438bd017f9
+      internalID: 272582545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Centipede Head Diagonal_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 8
+        height: 8
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfc6e89b388cd404bb795f455a26dd7e
+      internalID: 878578096
       vertices: []
       indices: 
       edges: []
@@ -211,10 +211,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Points_1: -1926966369
-      Points_3: -41583316
-      Points_0: -1834643874
-      Points_2: -1018228769
+      Centipede Head Diagonal_2: 272582545
+      Centipede Head Diagonal_3: 878578096
+      Centipede Head Diagonal_0: -445846836
+      Centipede Head Diagonal_1: -1683296857
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

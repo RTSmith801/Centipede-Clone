@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     public float centipedeDespawnTime = 0.1f;
     public float arenaGenerationTime = 0.0001f;
     public float gameOverTimer = 2f;
-    public float playerExplosionTime = 0.025f;
+    public float playerExplosionTime = 0.05f;
 
     //Gameplay Variables
     //Used to start/stop gameplay
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     public int playerLives;
     public float laserSpeed = 80f;
     public int centipedeFollowFrames = 10;
-    public float centipedeMoveSpeed = 10f;
+    public float centipedeMoveSpeed = .1f;
     //Used for initial mushroom generation
     public int maxRowDensity = 3;
     //Used for initial centipede generation call. 
@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
     public GameObject points300;
 	public GameObject points600;
 	public GameObject points900;
+    public GameObject points1000;
 
 
 	//Required in Unity Scene
@@ -118,6 +119,7 @@ public class GameManager : MonoBehaviour
         points300 = Resources.Load("Prefabs/Points300") as GameObject;
 		points600 = Resources.Load("Prefabs/Points600") as GameObject;
 		points900 = Resources.Load("Prefabs/Points900") as GameObject;
+        points1000 = Resources.Load("Prefabs/Points1000") as GameObject;
 	}
 
     void BuildReferences()

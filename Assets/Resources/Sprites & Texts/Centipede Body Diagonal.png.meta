@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c5caafae9ea8e574a8311c9a3e2af842
+guid: 87b1e220037f19948987813b78cc2ac6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,13 +117,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Points_0
+      name: Centipede Body Diagonal_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 48
-        width: 16
-        height: 16
+        y: 24
+        width: 8
+        height: 8
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,41 +131,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 076a54bab3cf1cf47944dea866d04e1b
-      internalID: -1834643874
+      spriteID: 73bd3610ce9b6f4448ac9255cb59ea4b
+      internalID: 1323164751
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Points_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 32
-        width: 16
-        height: 16
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 685ac19671418854a8f113c4cd5c8734
-      internalID: -1926966369
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Points_2
+      name: Centipede Body Diagonal_1
       rect:
         serializedVersion: 2
         x: 0
         y: 16
-        width: 16
-        height: 16
+        width: 8
+        height: 8
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,20 +152,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 12fe7c99e7af66546ad3f35f2882b2bb
-      internalID: -1018228769
+      spriteID: e33362d9aed2a1348acadb8ecfb4b44d
+      internalID: -1790951528
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Points_3
+      name: Centipede Body Diagonal_2
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 16
-        height: 16
+        y: 8
+        width: 8
+        height: 8
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,8 +173,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27f1f48779b56074bb0eba5e6bc264ae
-      internalID: -41583316
+      spriteID: 33e959e4fa3122546a64e9b37346215e
+      internalID: -229214511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Centipede Body Diagonal_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 8
+        height: 8
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad0d663f2f3364841a5a1948c9e0ce6b
+      internalID: 738781905
       vertices: []
       indices: 
       edges: []
@@ -211,10 +211,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Points_1: -1926966369
-      Points_3: -41583316
-      Points_0: -1834643874
-      Points_2: -1018228769
+      Centipede Body Diagonal_1: -1790951528
+      Centipede Body Diagonal_3: 738781905
+      Centipede Body Diagonal_2: -229214511
+      Centipede Body Diagonal_0: 1323164751
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

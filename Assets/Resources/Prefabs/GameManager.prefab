@@ -52,7 +52,7 @@ MonoBehaviour:
   centipedeDespawnTime: 0.1
   arenaGenerationTime: 0.0001
   gameOverTimer: 2
-  playerExplosionTime: 0.025
+  playerExplosionTime: 0.05
   gameOver: 0
   pauseGame: 0
   startingPlayerLives: 2
@@ -67,15 +67,21 @@ MonoBehaviour:
   laser: {fileID: 0}
   mushroom: {fileID: 0}
   playerExplosion: {fileID: 0}
-  points: {fileID: 0}
+  points300: {fileID: 0}
+  points600: {fileID: 0}
+  points900: {fileID: 0}
+  points1000: {fileID: 0}
   am: {fileID: 0}
   arena: {fileID: 0}
   movementBoundary: {fileID: 0}
   movementBoundaryX: 0
   movementBoundaryY: 0
   mainCam: {fileID: 0}
+  scorpionMoveSpeed: 0.15
+  scorpionTopBoundary: 0
+  scorpionBottomBoundary: 0
   spiderMoveSpeed: 0.15
   spiderTopBoundary: 0
   spiderBottomBoundary: 0
-  spiderTimerMin: 0.25
-  spiderTimerMax: 0.75
+  spiderMoveTimerMin: 0.25
+  spiderMoveTimerMax: 0.75

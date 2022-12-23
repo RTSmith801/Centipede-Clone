@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 891473592153542879}
   - component: {fileID: 6259187186144943649}
   m_Layer: 0
-  m_Name: Points900
+  m_Name: Points1000
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1018228769, guid: c5caafae9ea8e574a8311c9a3e2af842, type: 3}
+  m_Sprite: {fileID: -41583316, guid: c5caafae9ea8e574a8311c9a3e2af842, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
