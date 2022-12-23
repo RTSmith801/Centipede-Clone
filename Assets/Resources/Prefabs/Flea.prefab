@@ -51,7 +51,6 @@ MonoBehaviour:
   gm: {fileID: 0}
   sr: {fileID: 0}
   moveSpeed: 0.15
-  mushroomSpawnChance: 0.15
 --- !u!212 &3826752715656525081
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -92,7 +91,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 30
+  m_SortingOrder: 35
   m_Sprite: {fileID: 1317600995, guid: 4321436597fe917419f73bea3f01135d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
