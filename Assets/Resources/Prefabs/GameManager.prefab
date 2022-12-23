@@ -59,7 +59,7 @@ MonoBehaviour:
   playerLives: 0
   laserSpeed: 80
   centipedeFollowFrames: 10
-  centipedeMoveSpeed: 10
+  centipedeMoveSpeed: 0.1
   maxRowDensity: 3
   startingCentipedeGenerationCount: 10
   centipedeLivingList: []

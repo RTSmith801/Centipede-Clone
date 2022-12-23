@@ -66,15 +66,16 @@ public class Centipede : Enemy
     //Fixed Update to check if this changes build behavior. 
     private void FixedUpdate()
     {
-        if (nodeBehind != null)
-        {
-            nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
-        }
+
         if (gm.pauseGame == false)
         {
             Move();
         }
-    }
+		if (nodeBehind != null)
+		{
+			nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
+		}
+	}
 
     override protected void Move()
     {
@@ -202,7 +203,6 @@ public class Centipede : Enemy
             // Bounce logic
             if (collision.transform.gameObject.tag == "mushroom")
             {
-                print("oh I hit a fucking mushroom");
 				//clamp to a column          
 				float x = Mathf.Round(transform.position.x);
 				transform.position = new Vector3(x, transform.position.y);
