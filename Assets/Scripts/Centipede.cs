@@ -9,6 +9,7 @@ public class Centipede : Enemy
     public bool isHead = false;    
     bool movingRight = true;
     float moveSpeed;
+    float diveXPosition;
     Vector2 castDirection = Vector2.right;
     [SerializeField]
     MoveState moveState = MoveState.lateral_descend;
@@ -87,6 +88,7 @@ public class Centipede : Enemy
                 Descend();
                 break;
             case MoveState.dive:
+                Dive();
                 break;
             case MoveState.ascend:
                 Ascend();
@@ -134,7 +136,13 @@ public class Centipede : Enemy
     public void LeaderUpdate()
     {
         isHead = true;
-        MoveStateSwitch(centipedeHeadMoveState);
+
+        // This makes it so shooting a diving centipede makes it exit it's dive
+        if (centipedeHeadMoveState == MoveState.dive)
+            MoveStateSwitch(MoveState.lateral_descend);
+        else
+            MoveStateSwitch(centipedeHeadMoveState);
+
         movingRight = !movingRight;
     }
 
@@ -147,6 +155,24 @@ public class Centipede : Enemy
         // Animation call here
     }
 
+    void Dive()
+    {
+        if (transform.position.x > diveXPosition + 1 || transform.position.x < diveXPosition)
+            movingRight = !movingRight;
+
+        Vector3 movementDirection = movingRight? (Vector3.right + Vector3.down).normalized : (Vector3.left + Vector3.down).normalized;
+
+        transform.position = transform.position + movementDirection * .15f;
+
+        // If below zero, snap to zero and change state
+        if (transform.position.y < 0)
+        {
+            verticalTarget = 1;
+			transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+            MoveStateSwitch(MoveState.ascend);
+        }
+    }
+
     /// <summary>
     /// 1 is for ascend, -1 is for descend
     /// </summary>
@@ -154,7 +180,7 @@ public class Centipede : Enemy
     void Lateral(int direction, MoveState nextState)
     {
         Vector3 center = transform.localPosition + new Vector3(.5f, .5f);
-        RaycastHit2D[] collide = Physics2D.BoxCastAll(center, new Vector2(.9f, .9f), 0f, castDirection, moveSpeed * Time.deltaTime);
+        RaycastHit2D[] collide = Physics2D.BoxCastAll(center, new Vector2(.8f, .8f), 0f, castDirection, moveSpeed);
 
         foreach (RaycastHit2D collision in collide)
         {
@@ -173,30 +199,45 @@ public class Centipede : Enemy
             }
 
 
-
-            if (collision.transform.gameObject.tag == "mushroom" || hitAnotherCentipedeHead)
+            // Bounce logic
+            if (collision.transform.gameObject.tag == "mushroom")
             {
-                //clamp to a column          
-                verticalTarget = transform.position.y + direction;
-                float x = Mathf.Round(transform.position.x);
-                transform.position = new Vector3(x, transform.position.y);
+                print("oh I hit a fucking mushroom");
+				//clamp to a column          
+				float x = Mathf.Round(transform.position.x);
+				transform.position = new Vector3(x, transform.position.y);
 
-                UpdateCastDirection();
-                MoveStateSwitch(nextState);
-                //it's a feature  
-                //print("fuckery happening here");
-                return;
+                // If mushroom is poisoned, dive
+				if (moveState != MoveState.dive && collision.transform.GetComponent<Mushroom>().isPoisoned)
+                {
+					MoveStateSwitch(MoveState.dive);
+				}
+                else
+                {
+					verticalTarget = transform.position.y + direction;
+
+					UpdateCastDirection();
+					MoveStateSwitch(nextState);
+					return;
+				}
+
             }
-        }
+            else if (hitAnotherCentipedeHead)
+            {
+				//clamp to a column          
+				float x = Mathf.Round(transform.position.x);
+				transform.position = new Vector3(x, transform.position.y);
 
-        // Do we love this?
-        float xDir;
-        if (movingRight)
-            xDir = 1;
-        else
-            xDir = -1;
+				verticalTarget = transform.position.y + direction;
 
-        float horizontal = xDir * Time.deltaTime * moveSpeed;
+				UpdateCastDirection();
+				MoveStateSwitch(nextState);
+				return;
+			}
+		}
+
+        float xDir = movingRight? 1 : -1;
+        float horizontal = xDir * moveSpeed;
         transform.Translate(horizontal, 0, 0);
 
         CheckSideBoundaries();
@@ -207,7 +248,7 @@ public class Centipede : Enemy
     {
         if (transform.position.y > verticalTarget)
         {
-            transform.Translate(0, Time.deltaTime * moveSpeed * -1, 0);
+            transform.Translate(0, moveSpeed * -1, 0);
         }
         else
         {
@@ -233,7 +274,7 @@ public class Centipede : Enemy
     {
         if (transform.position.y < verticalTarget)
         {
-            transform.Translate(0, Time.deltaTime * moveSpeed * 1, 0);
+            transform.Translate(0, moveSpeed * 1, 0);
         }
         else
         {
@@ -265,12 +306,10 @@ public class Centipede : Enemy
 
             if (moveState == MoveState.lateral_descend)
             {
-                verticalTarget = transform.position.y - 1;
                 MoveStateSwitch(MoveState.descend);
             }
             else if (moveState == MoveState.lateral_ascend)
             {
-                verticalTarget = transform.position.y + 1;
                 MoveStateSwitch(MoveState.ascend);
             }
             else
@@ -306,7 +345,8 @@ public class Centipede : Enemy
         {
             case MoveState.ascend:
                 moveStateDirection = MoveStateDirection.up;
-                break;
+				verticalTarget = transform.position.y + 1;
+				break;
             case MoveState.lateral_ascend:
                 if (movingRight)
                 {
@@ -318,7 +358,16 @@ public class Centipede : Enemy
                 }
                 break;
             case MoveState.descend:
-            case MoveState.dive:
+				moveStateDirection = MoveStateDirection.down;
+				verticalTarget = transform.position.y - 1;
+                break;
+			case MoveState.dive:
+                diveXPosition = transform.position.x;
+
+                // edge case if on the right edge of the screen
+                if (diveXPosition >= gm.movementBoundaryX - 1)
+                    diveXPosition -= 1;
+
                 moveStateDirection = MoveStateDirection.down;
                 break;
             case MoveState.lateral_descend:
