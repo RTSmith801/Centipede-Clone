@@ -30,8 +30,9 @@ public class Player : MonoBehaviour
     
     void Start()
     {
-        
-        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+
     }
 
     // Update is called once per frame
@@ -109,11 +110,11 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             Cursor.visible = false;
-
             Cursor.lockState = CursorLockMode.Confined;
         }
 
         mousePos = gm.mainCam.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.y += 5f; //moves player in front of thumb. 
         mousePos.z = 0f;
         transform.position = mousePos;
         ClampPlayerMovement();

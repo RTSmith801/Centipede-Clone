@@ -185,7 +185,8 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        am.FadeinBGM("BGM1");
+        //am.FadeinBGM("BGM1"); // fade in having trouble on mobile launch.. 
+        am.Play("BGM1");
         NewCentipedeWave();        
         pauseGame = false;
     }
