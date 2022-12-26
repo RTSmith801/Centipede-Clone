@@ -114,7 +114,6 @@ public class Player : MonoBehaviour
         }
 
         mousePos = gm.mainCam.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.y += 5f; //moves player in front of thumb. 
         mousePos.z = 0f;
         transform.position = mousePos;
         ClampPlayerMovement();

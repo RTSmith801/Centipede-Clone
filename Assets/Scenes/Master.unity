@@ -599,6 +599,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 229524595446553568, guid: ede00d9b738d6b041a997378588e5af1, type: 3}
+      propertyPath: arenaGenerationTime
+      value: 0.025
+      objectReference: {fileID: 0}
     - target: {fileID: 885631850260090885, guid: ede00d9b738d6b041a997378588e5af1, type: 3}
       propertyPath: m_RootOrder
       value: 4

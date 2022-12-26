@@ -253,7 +253,7 @@ public class Centipede : Enemy
         {
             transform.Translate(0, moveSpeed * -1, 0);
         }
-        else
+        if (transform.position.y < verticalTarget)
         {
             float y = verticalTarget;
             transform.position = new Vector3(transform.position.x, verticalTarget);
