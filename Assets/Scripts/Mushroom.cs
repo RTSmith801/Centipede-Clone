@@ -66,4 +66,14 @@ public class Mushroom : MonoBehaviour
             sr.sprite = mushroomSpriteAtalas.Single(s => s.name == "Mushroom_" + spriteNum);
         }
     }
+
+    public void HealMushroom()
+    {
+        gm.scoreUpdate(5); 
+        isPoisoned = false;
+        sr.color = Color.white;
+        health = 4;
+        SpriteGeneration();
+		gm.am.Play("boop");
+	}
 }

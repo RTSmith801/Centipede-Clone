@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     //Used for manually creating delays;
     public float centipedeDespawnTime = 0.1f;
-    public float arenaGenerationTime = 0.05f;
+    public float mushroomGenerationTime = 0.05f;
     public float gameOverTimer = 2f;
     public float playerExplosionTime = 0.05f;
 
@@ -172,7 +172,8 @@ public class GameManager : MonoBehaviour
     //Builds arena then starts game
     private IEnumerator BuildArena()
     {
-        mushroomContainer = Instantiate(mushroomContainerPrefab);
+		scoreUpdate(0);
+		mushroomContainer = Instantiate(mushroomContainerPrefab);
 
         //for (int i = 4; i <= arena.transform.localScale.y; i++)
         for (int i = (int)arena.transform.localScale.y; i > 3; i--)
@@ -186,7 +187,7 @@ public class GameManager : MonoBehaviour
                 {
                     Instantiate(mushroom, new Vector3(rnd - 1, i - 1, 0), Quaternion.identity, mushroomContainer.transform);
                     density.Add(rnd);
-                    yield return new WaitForSeconds(arenaGenerationTime);
+                    yield return new WaitForSeconds(mushroomGenerationTime);
                 }
             }
         }
@@ -206,8 +207,10 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RestartWave()
     {
-        //Despawn enemies (centipedes)
-        for (int i = centipedeLivingList.Count - 1; i >= 0; i--)
+		scoreUpdate(0);
+
+		//Despawn enemies (centipedes)
+		for (int i = centipedeLivingList.Count - 1; i >= 0; i--)
         {
             //Prevents crash if centipede dies before being removed from list.
             if (centipedeLivingList[i])
@@ -216,6 +219,7 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(centipedeDespawnTime);
             }
         }
+		centipedeLivingList.Clear();
 
 		// Despawn enemies (everything else)
 		Enemy[] remainingEnemies = FindObjectsOfType<Enemy>();
@@ -224,11 +228,22 @@ public class GameManager : MonoBehaviour
             Destroy(enemy.gameObject);
 		}
 
+		// Heal Mushroom Logic
+		Mushroom[] munchrooms = FindObjectsOfType<Mushroom>();
+        for (int i = 0; i < munchrooms.Length; i++)
+        {
+            if (munchrooms[i].health < 4 || munchrooms[i].isPoisoned)
+            {
+				munchrooms[i].HealMushroom();
+				yield return new WaitForSeconds(mushroomGenerationTime);
+			}
+		}
 
-		centipedeLivingList.Clear();
+
+        // Spawn Player Again
         Vector2 instantionPoint = new Vector2(arena.transform.localPosition.x + 15, arena.transform.localPosition.y);
         Instantiate(player, instantionPoint, Quaternion.identity);
-        scoreUpdate(0);
+
         pauseGame = false;
         SpawnEnemies();
     }
@@ -236,12 +251,9 @@ public class GameManager : MonoBehaviour
 
     void NewCentipedeWave()
     {
-        centipedeWave++;
-        scoreUpdate(0);
+		scoreUpdate(0);
+		centipedeWave++;
         SpawnEnemies();
-
-
-
     }
 
 	Vector2 GetSpiderInstantiationPoint()

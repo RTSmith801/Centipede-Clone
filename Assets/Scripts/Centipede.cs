@@ -155,6 +155,9 @@ public class Centipede : Enemy
 
     public void LeaderUpdate()
     {
+        // snap to the closest row
+        transform.position = new Vector3(transform.position.x, Mathf.Round(transform.position.y), transform.position.z);
+
         isHead = true;
 
         // This makes it so shooting a diving centipede makes it exit it's dive
