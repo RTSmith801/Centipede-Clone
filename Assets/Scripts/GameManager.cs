@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public int highScore; // get and set using PlayerPrefs
     public bool highScoreReached = false;
-    public int centipedeWave = 0;
+    public int centipedeWave = -1;
 
     //Used for manually creating delays;
     public float centipedeDespawnTime = 0.1f;
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
     //Used for initial mushroom generation
     public int maxRowDensity = 3;
     //Used for initial centipede generation call. 
-    public int startingCentipedeGenerationCount = 10;
+    public int startingCentipedeGenerationCount = 12;
     //Incremented everytime all centipedes are destroyed
     int centipedeGenerationCount;
     [SerializeField]
@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
     //Prefabs loaded in from resources
     public GameObject laser;
     public GameObject mushroom;
+    public GameObject mushroomContainer;
+    GameObject mushroomContainerPrefab;
     GameObject centipede;
     GameObject flea;
     GameObject spider;
@@ -110,7 +112,8 @@ public class GameManager : MonoBehaviour
     {
         laser = Resources.Load("Prefabs/Laser") as GameObject;
         mushroom = Resources.Load("Prefabs/Mushroom") as GameObject;
-        centipede = Resources.Load("Prefabs/Centipede") as GameObject;
+        mushroomContainerPrefab = Resources.Load("Prefabs/MushroomContainer") as GameObject;
+		centipede = Resources.Load("Prefabs/Centipede") as GameObject;
         flea = Resources.Load("Prefabs/Flea") as GameObject;
         spider = Resources.Load("Prefabs/Spider") as GameObject;
         scorpion = Resources.Load("Prefabs/Scorpion") as GameObject;
@@ -169,6 +172,8 @@ public class GameManager : MonoBehaviour
     //Builds arena then starts game
     private IEnumerator BuildArena()
     {
+        mushroomContainer = Instantiate(mushroomContainerPrefab);
+
         //for (int i = 4; i <= arena.transform.localScale.y; i++)
         for (int i = (int)arena.transform.localScale.y; i > 3; i--)
         {
@@ -179,7 +184,7 @@ public class GameManager : MonoBehaviour
                 int rnd = Random.Range(1, (int)arena.transform.localScale.x + 1);
                 if (!density.Contains(rnd))
                 {
-                    Instantiate(mushroom, new Vector3(rnd - 1, i - 1, 0), Quaternion.identity);
+                    Instantiate(mushroom, new Vector3(rnd - 1, i - 1, 0), Quaternion.identity, mushroomContainer.transform);
                     density.Add(rnd);
                     yield return new WaitForSeconds(arenaGenerationTime);
                 }
@@ -265,12 +270,30 @@ public class GameManager : MonoBehaviour
 
     //Instantiaion point needs to be randomized here
     void SpawnEnemies()
-    {   
-        //set nodeAhead/nodeBehind for centipedes.
-        List<Centipede> centipedeSpawnList = new List<Centipede>();
+    {
+        // Sets the centipede length and how many heads based on wave number
+        centipedeGenerationCount = startingCentipedeGenerationCount - (centipedeWave / 2);
+        int headCount = (centipedeWave / 2);
+
+        // Generates a list of unique spawn points the length of how many centipede heads you will have total (including the main centipede)
+		List<Vector2> uniqueSpawnPoints = new List<Vector2>();
+		while (uniqueSpawnPoints.Count < headCount + 1)
+		{
+            Vector2 point = GetEnemyInstantiationPointTop();
+			if (!uniqueSpawnPoints.Contains(point))
+			{
+				uniqueSpawnPoints.Add(point);
+			}
+		}
+
+
+
+        Vector2 instantionPoint = uniqueSpawnPoints[0];
+        uniqueSpawnPoints.RemoveAt(0);
+		//set nodeAhead/nodeBehind for full length Centipede.
+		List<Centipede> centipedeSpawnList = new List<Centipede>();
         for (int i = 0; i < centipedeGenerationCount; i++)
         {
-			Vector2 instantionPoint = GetEnemyInstantiationPointTop();
             Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
             centipedeSpawnList.Add(c);
             centipedeLivingList.Add(c);
@@ -299,6 +322,15 @@ public class GameManager : MonoBehaviour
             }
             centipedeSpawnList[i].Initialized(a, b);
         }
+
+        // Add individual head only centipedes
+        for (int i = 0; i < headCount; i++)
+        {
+			instantionPoint = uniqueSpawnPoints[0];
+			uniqueSpawnPoints.RemoveAt(0);
+			Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
+			centipedeLivingList.Add(c);
+		}
 
 
 		// Spawn Fleas
@@ -343,7 +375,6 @@ public class GameManager : MonoBehaviour
         centipedeLivingList.Remove(c.GetComponent<Centipede>());
         if (centipedeLivingList.Count <= 0)
         {
-            centipedeGenerationCount += 2;
             NewCentipedeWave();
         }
     }

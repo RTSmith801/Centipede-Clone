@@ -48,9 +48,9 @@ MonoBehaviour:
   score: 0
   highScore: 0
   highScoreReached: 0
-  centipedeWave: 0
+  centipedeWave: -1
   centipedeDespawnTime: 0.1
-  arenaGenerationTime: 0.05
+  arenaGenerationTime: 0.025
   gameOverTimer: 2
   playerExplosionTime: 0.05
   gameOver: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
   centipedeFollowFrames: 10
   centipedeMoveSpeed: 0.1
   maxRowDensity: 3
-  startingCentipedeGenerationCount: 10
+  startingCentipedeGenerationCount: 12
   centipedeLivingList: []
   laserExists: 0
   laser: {fileID: 0}

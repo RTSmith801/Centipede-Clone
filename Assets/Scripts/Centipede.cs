@@ -110,6 +110,22 @@ public class Centipede : Enemy
         SpriteGeneration();
     }
 
+    //public Centipede GetNodeBehind()
+    //{
+    //    return nodeBehind;
+    //}
+
+    public List<Centipede> GetNodesBehind(List<Centipede> nodeList)
+    {
+        nodeList.Add(this);
+
+        if (nodeBehind != null)
+            return nodeBehind.GetNodesBehind(nodeList);
+        else
+            return nodeList;
+
+    }
+
     void Follow()
     {
         //get node ahead's transform 
@@ -188,18 +204,30 @@ public class Centipede : Enemy
 
         foreach (RaycastHit2D collision in collide)
         {
-            bool hitAnotherCentipedeHead = false;
+            bool hitAnotherCentipede = false;
 
             // check if enemy is a centipede head
             if (collision.transform.gameObject.tag == "enemy")
             {
-                int other = collision.transform.gameObject.GetInstanceID();
-                int self = transform.gameObject.GetInstanceID();
 
-                if (collision.transform.GetComponent<Centipede>() != null && self != other)
+
+
+
+                Centipede centipedeHit = collision.transform.GetComponent<Centipede>();
+                // Makes sure that the collision is a centipede and not another type of enemy
+                if (centipedeHit != null)
                 {
-                    hitAnotherCentipedeHead = collision.transform.GetComponent<Centipede>().isHead;
+                    List<Centipede> nodesBehind = GetNodesBehind(new List<Centipede>());
+                    // check if the sunnovabitch is inside me
+                    hitAnotherCentipede = !nodesBehind.Contains(centipedeHit);
                 }
+                
+
+
+                //if (collision.transform.GetComponent<Centipede>() != null && self != other)
+                //{
+                //    hitAnotherCentipedeHead = collision.transform.GetComponent<Centipede>().isHead;
+                //}
             }
 
 
@@ -225,7 +253,7 @@ public class Centipede : Enemy
 				}
 
             }
-            else if (hitAnotherCentipedeHead)
+            else if (hitAnotherCentipede)
             {
 				//clamp to a column          
 				float x = Mathf.Round(transform.position.x);
@@ -425,7 +453,7 @@ public class Centipede : Enemy
             nodeBehind.LeaderUpdate();
         }
               
-        Instantiate(gm.mushroom, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
+        Instantiate(gm.mushroom, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity, gm.mushroomContainer.transform);
 
         gm.am.Play("boom2");
         gm.DecrementCentipedeList(this.gameObject);

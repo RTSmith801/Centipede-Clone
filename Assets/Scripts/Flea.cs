@@ -32,12 +32,13 @@ public class Flea : Enemy
 			if (rnd <= mushroomSpawnChance)
 			{
 				// spawn mushroom
-				Instantiate(gm.mushroom, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity);
+				Instantiate(gm.mushroom, new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0), Quaternion.identity, gm.mushroomContainer.transform);
 			}
 		}
     }
     override protected void LocalStart()
     {
+
         pts = 200;
         health = 2;
         yTarget = transform.position.y - 1;
