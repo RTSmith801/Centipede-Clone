@@ -23,6 +23,10 @@ public class Player : MonoBehaviour
     float horizontalSpeed = 2.0f;
     float verticalSpeed = 2.0f;
 
+    // laser throttling variables
+    float laserDelay = .1f;
+    float laserTimer = 0f;
+
     private void Awake()
     {
         gm = FindObjectOfType<GameManager>();
@@ -58,7 +62,7 @@ public class Player : MonoBehaviour
             //Player movement
             //PlayerMoveKeyboard();
             PlayerMoveMouse();
-            if (Input.GetButton("Fire1"))
+            if (Input.GetButton("Fire1") && Time.time > laserTimer)
             {
                 FireLaser();
             }
@@ -75,7 +79,10 @@ public class Player : MonoBehaviour
             Vector3 position = transform.position; 
             position += new Vector3(0.4375f, laserPosition);
             Instantiate(gm.laser, position, Quaternion.identity);
-        }   
+
+            laserTimer = Time.time + laserDelay;
+			gm.am.Play("laser");
+		}   
     }
 
     //Player movement keyboard

@@ -27,7 +27,6 @@ public class Laser : MonoBehaviour
         Movement();
         //Laser sound called here
         gm.laserExists = true;
-        gm.am.Play("laser");
     }
     
     void Update()
