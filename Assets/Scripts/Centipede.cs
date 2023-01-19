@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class Centipede : Enemy
 {
@@ -23,6 +24,7 @@ public class Centipede : Enemy
     int centipedeFollowFrames; //get from GameManager
     [SerializeField]
     public List<Vector2> followQueue;
+
 
     [SerializeField]
     float verticalTarget;

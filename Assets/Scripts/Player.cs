@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -82,6 +83,8 @@ public class Player : MonoBehaviour
 
             laserTimer = Time.time + laserDelay;
 			gm.am.Play("laser");
+
+            
 		}   
     }
 
