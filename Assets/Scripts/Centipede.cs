@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class Centipede : Enemy
 {
@@ -22,7 +23,9 @@ public class Centipede : Enemy
     Centipede nodeBehind;
     int centipedeFollowFrames; //get from GameManager
     [SerializeField]
-    public List<Vector2> followQueue;
+    //public List<Vector2> followQueue;
+    public List<Tuple<Vector2, MoveStateDirection>> followQueue;
+
 
     [SerializeField]
     float verticalTarget;
@@ -30,7 +33,7 @@ public class Centipede : Enemy
     //float horizontalTarget;
 
     //Animation
-    string animatorTriggerName;
+    string animatorTriggerName = "";
     Animator animator;
 
     float movementSoundTimer = .25f;
@@ -48,23 +51,10 @@ public class Centipede : Enemy
     {   
         centipedeFollowFrames = gm.centipedeFollowFrames;
         moveSpeed = gm.centipedeMoveSpeed;
-        isHead = false;
-        SpriteGeneration();
+        //isHead = false;
+        //SpriteGeneration();
         StartCoroutine("MovementSound");
     }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (nodeBehind != null)
-    //    {
-    //        nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
-    //    }
-    //    if(gm.pauseGame == false)
-    //    {
-    //        Move();
-    //    }
-    //}
 
     //Fixed Update to check if this changes build behavior. 
     private void FixedUpdate()
@@ -76,7 +66,7 @@ public class Centipede : Enemy
         }
 		if (nodeBehind != null)
 		{
-			nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState);
+			nodeBehind.FollowQueueAdd(transform.position, movingRight, centipedeHeadMoveState, moveStateDirection);
 		}
 	}
 
@@ -110,11 +100,6 @@ public class Centipede : Enemy
         SpriteGeneration();
     }
 
-    //public Centipede GetNodeBehind()
-    //{
-    //    return nodeBehind;
-    //}
-
     public List<Centipede> GetNodesBehind(List<Centipede> nodeList)
     {
         nodeList.Add(this);
@@ -131,11 +116,13 @@ public class Centipede : Enemy
         //get node ahead's transform 
         if (followQueue.Count >= centipedeFollowFrames)
         {
-            transform.position = followQueue[0];
+            transform.position = followQueue[0].Item1;
+            moveStateDirection = followQueue[0].Item2;
             followQueue.RemoveAt(0);
         }
     }
-   
+
+    //Called from Game Manger when centipede is spawned.   
     public void Initialized(Centipede a, Centipede b)
     {
         nodeAhead = a;
@@ -148,9 +135,11 @@ public class Centipede : Enemy
         }
         else
         {
-            followQueue = new List<Vector2>();
+            isHead = false;
+            followQueue = new List<Tuple<Vector2, MoveStateDirection>>();
             MoveStateSwitch(MoveState.follow);
         }
+        SpriteGeneration();
     }
 
     public void LeaderUpdate()
@@ -169,10 +158,11 @@ public class Centipede : Enemy
         movingRight = !movingRight;
     }
 
-    public void FollowQueueAdd(Vector2 newTarget, bool _movingRight, MoveState _centipedeHeadMoveState)
+    public void FollowQueueAdd(Vector2 newTarget, bool _movingRight, MoveState _centipedeHeadMoveState, MoveStateDirection _moveStateDirection)
     {
+
         
-        followQueue.Add(newTarget);
+        followQueue.Add(new Tuple<Vector2, MoveStateDirection>(newTarget, _moveStateDirection));
         movingRight = _movingRight;
         centipedeHeadMoveState = _centipedeHeadMoveState;
         // Animation call here
@@ -371,8 +361,8 @@ public class Centipede : Enemy
     void MoveStateSwitch(MoveState ms)
     {
         moveState = ms;
-        centipedeHeadMoveState = ms;
-        SpriteGeneration();
+        //centipedeHeadMoveState = ms;
+        //SpriteGeneration();
 
         //Set moveStateDirection here
         switch (ms)
@@ -415,17 +405,20 @@ public class Centipede : Enemy
                 }
                 break;
         }
-        animator.SetTrigger(animatorTriggerName);
+        //animator.SetTrigger(animatorTriggerName);
+        SpriteGeneration();
     }
 
     void SpriteGeneration()
-    {   
+    {
+        if (isHead)
+        {
             switch (moveState)
             {
                 case MoveState.lateral_ascend:
                 case MoveState.lateral_descend:
                     if (movingRight)
-                    {   
+                    {
                         animatorTriggerName = "CentipedeHeadMoveRight";
                     }
                     else
@@ -441,11 +434,37 @@ public class Centipede : Enemy
                     animatorTriggerName = "CentipedeHeadMoveUp";
                     break;
                 case MoveState.follow:
-                    animatorTriggerName = "CentipedeBodyMoveUp";
+                    print("This is called as the centipede is spawned before it begins moving.");
+                    //Placeholder animation before it starts moving
+                    animatorTriggerName = "CentipedeBodyMoveDown";
                     break;
                 default:
+                    print("This should never be called");
                     break;
             }
+        }
+        else if (!isHead)
+        {
+            switch (moveStateDirection)
+            {
+                case MoveStateDirection.up:
+                    animatorTriggerName = "CentipedeBodyMoveUp";
+                    break;
+                case MoveStateDirection.left:
+                    animatorTriggerName = "CentipedeBodyMoveLeft";
+                    break;
+                case MoveStateDirection.down:
+                    animatorTriggerName = "CentipedeBodyMoveDown";
+                    break;
+                case MoveStateDirection.right:
+                    animatorTriggerName = "CentipedeBodyMoveRight";
+                    break;
+                default:
+                    print("This should never be called");
+                    break;
+            }
+        }
+        animator.SetTrigger(animatorTriggerName);
     }
 
     public override void Hit()
