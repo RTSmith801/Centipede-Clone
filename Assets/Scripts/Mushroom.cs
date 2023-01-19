@@ -10,9 +10,11 @@ public class Mushroom : MonoBehaviour
     public bool isPoisoned { get; private set; }
 
     GameManager gm;
-    SpriteRenderer sr;
-    Sprite[] mushroomSpriteAtalas;
-    int spriteNum;
+    public SpriteRenderer sr;
+    Sprite[] mushroomSpriteAtlas;
+    Sprite[] MushroomSpriteAtlasPoisoned;
+
+	int spriteNum;
 
     private void Awake()
     {
@@ -23,7 +25,8 @@ public class Mushroom : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mushroomSpriteAtalas = Resources.LoadAll<Sprite>("Sprites & Texts/Mushroom");
+        mushroomSpriteAtlas = Resources.LoadAll<Sprite>("Sprites & Texts/Mushroom");
+        MushroomSpriteAtlasPoisoned = Resources.LoadAll<Sprite>("Sprites & Texts/MushroomPoisoned");
         spriteNum = health;
         SpriteGeneration();
         //print(sr.sprite);
@@ -44,7 +47,8 @@ public class Mushroom : MonoBehaviour
     public void Poison()
     {
         isPoisoned = true;
-        sr.color = Color.blue;
+        SpriteGeneration();
+        //sr.color = Color.blue;
         // change what it looks like
     }
 
@@ -60,16 +64,18 @@ public class Mushroom : MonoBehaviour
         else if (health == 3) { spriteNum = 1; }
         else if (health == 2) { spriteNum = 2; }
         else { spriteNum = 3; }
- 
+
+        Sprite[] currentAtlas = isPoisoned ? MushroomSpriteAtlasPoisoned : mushroomSpriteAtlas;
         if (sr.sprite)
         {
-            sr.sprite = mushroomSpriteAtalas.Single(s => s.name == "Mushroom_" + spriteNum);
+            //sr.sprite = mushroomSpriteAtlas.Single(s => s.name == "Mushroom_" + spriteNum);
+            sr.sprite = currentAtlas[spriteNum];
         }
     }
 
     public void HealMushroom()
     {
-        gm.scoreUpdate(5); 
+		gm.scoreUpdate(5); 
         isPoisoned = false;
         sr.color = Color.white;
         health = 4;
