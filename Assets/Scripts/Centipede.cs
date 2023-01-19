@@ -27,6 +27,7 @@ public class Centipede : Enemy
     public List<Tuple<Vector2, MoveStateDirection>> followQueue;
 
 
+
     [SerializeField]
     float verticalTarget;
     //used only by centipede followers

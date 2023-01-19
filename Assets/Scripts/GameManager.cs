@@ -123,6 +123,9 @@ public class GameManager : MonoBehaviour
 		points600 = Resources.Load("Prefabs/Points600") as GameObject;
 		points900 = Resources.Load("Prefabs/Points900") as GameObject;
         points1000 = Resources.Load("Prefabs/Points1000") as GameObject;
+
+        SwapPalette(1); // sets the palette to the default colors.
+
 	}
 
     void BuildReferences()
@@ -150,6 +153,33 @@ public class GameManager : MonoBehaviour
 
         //Fetch the high score from the PlayerPrefs. If no Int of this name exists, the default is 0.
         highScore = PlayerPrefs.GetInt("highScore", 0);
+    }
+
+    void SwapPalette(int _paletteNumber)
+    {
+        if (_paletteNumber < 1 || _paletteNumber > 14)
+            _paletteNumber = Random.Range(1, 15);
+        
+        Material mat = Resources.Load("Materials/Palette " + _paletteNumber) as Material;
+
+		mushroom.GetComponent<SpriteRenderer>().material = mat;
+        centipede.GetComponent<SpriteRenderer>().material = mat;
+        flea.GetComponent<SpriteRenderer>().material = mat;
+        spider.GetComponent<SpriteRenderer>().material = mat;
+        scorpion.GetComponent<SpriteRenderer>().material = mat;
+
+        foreach (Mushroom mush in FindObjectsOfType<Mushroom>())
+        {
+            mush.sr.material = mat;
+        }
+
+        foreach (Enemy enemy in FindObjectsOfType<Enemy>())
+        {
+            enemy.sr.material = mat;
+        }
+
+        FindObjectOfType<Player>().GetComponent<SpriteRenderer>().material = mat;
+
     }
 
     //Sets boundary for player movement
@@ -387,7 +417,8 @@ public class GameManager : MonoBehaviour
         centipedeLivingList.Remove(c.GetComponent<Centipede>());
         if (centipedeLivingList.Count <= 0)
         {
-            NewCentipedeWave();
+			SwapPalette(0);
+			NewCentipedeWave();
         }
     }
 
