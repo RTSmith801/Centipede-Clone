@@ -212,7 +212,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 20.708334
+  orthographic size: 29.40625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -542,6 +542,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2402542114421698716, guid: d168a1b8e132f4ccd8e0671aaacc065c, type: 3}
+      propertyPath: sounds.Array.size
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402542114421698716, guid: d168a1b8e132f4ccd8e0671aaacc065c, type: 3}
+      propertyPath: sounds.Array.data[13].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0c008ee3ee72a4362a35be25fa5de043, type: 3}
+    - target: {fileID: 2402542114421698716, guid: d168a1b8e132f4ccd8e0671aaacc065c, type: 3}
+      propertyPath: sounds.Array.data[13].name
+      value: extraLife
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402542114421698716, guid: d168a1b8e132f4ccd8e0671aaacc065c, type: 3}
+      propertyPath: sounds.Array.data[13].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2402542114421698716, guid: d168a1b8e132f4ccd8e0671aaacc065c, type: 3}
+      propertyPath: sounds.Array.data[13].volume
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 2402542114421698717, guid: d168a1b8e132f4ccd8e0671aaacc065c, type: 3}
       propertyPath: m_Name
       value: AudioManager

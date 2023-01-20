@@ -137,3 +137,10 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     source: {fileID: 0}
+  - name: extraLife
+    clip: {fileID: 8300000, guid: 0c008ee3ee72a4362a35be25fa5de043, type: 3}
+    volume: 0.25
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}

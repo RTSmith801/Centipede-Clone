@@ -394,8 +394,16 @@ public class GameManager : MonoBehaviour
         }
         scoreboard.text = "" + score;
         highscoreUI.text = "" + highScore;
-        //UI placement is currently hardcoded.
-        for(int i = 0; i < 5; i++)
+
+        // This executes every time this function crosses over a 12k pt mark
+        if (score / 12000 != (score - pts) / 12000)
+        {
+			playerLives++;
+            am.Play("extraLife");
+		}
+
+		//UI placement is currently hardcoded.
+		for (int i = 0; i < 5; i++)
         {
             if (playerLivesUI[i])
             {
