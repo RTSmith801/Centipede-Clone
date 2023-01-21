@@ -83,7 +83,10 @@ public class GameManager : MonoBehaviour
     GameObject[] playerLivesUI;
     public Camera mainCam;
 
-	// Flea / other enemy related variables
+    // Flea / other enemy related variables
+    float centipedeHeadTimeMin = 2f;
+    float centipedeHeadTimeMax = 8f;
+    float centipedeHeadTimer;
 	float fleaTimeMin = 0f;
 	float fleaTimeMax = 8f;
 	float fleaSpawnTimer;
@@ -101,6 +104,7 @@ public class GameManager : MonoBehaviour
 	public float spiderBottomBoundary;
 	public float spiderMoveTimerMin = .25f;
 	public float spiderMoveTimerMax = .75f;
+    bool centipedeHasReachedBottomThisWave;
 
 	private void Awake()
     {
@@ -144,6 +148,7 @@ public class GameManager : MonoBehaviour
     {
         gameOver = false;
         pauseGame = true;
+        centipedeHasReachedBottomThisWave = false;
         highScoreReached = false;
         score = 0;
         playerLives = startingPlayerLives;
@@ -310,6 +315,17 @@ public class GameManager : MonoBehaviour
 		return new Vector2(rand, arena.transform.localPosition.y + 39);
 	}
 
+    Vector2 GetCentipedeInstantiationPointSide()
+    {
+		// Fifty. Fifty. Left or right. 
+		float xPos = Random.Range(0, 100) >= 50 ? -2 : movementBoundaryX;
+		float yPos = (int)Random.Range(spiderBottomBoundary + 4f, spiderTopBoundary); // casted to an int so it always starts on a nice row
+
+        print("sending location: " + new Vector2(xPos, yPos));
+
+		return new Vector2(xPos, yPos);
+	}
+
     //Instantiaion point needs to be randomized here
     void SpawnEnemies()
     {
@@ -373,6 +389,11 @@ public class GameManager : MonoBehaviour
 			Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
 			centipedeLivingList.Add(c);
 		}
+
+        // Sets this value to false so individual heads won't spawn until the centipede hits the bottom
+        centipedeHasReachedBottomThisWave = false;
+        StopCoroutine("SpawnCentipedeHeadCoroutine"); 
+        
 
 
 		// Spawn Fleas
@@ -470,7 +491,28 @@ public class GameManager : MonoBehaviour
         gameOver = true;
     }
 
-    public void SpawnFlea()
+	public void SpawnCentipedeHead()
+	{
+       
+        centipedeHeadTimer = Random.Range(centipedeHeadTimeMin, centipedeHeadTimeMax);
+		StopCoroutine("SpawnCentipedeHeadCoroutine");
+		StartCoroutine("SpawnCentipedeHeadCoroutine");
+	}
+
+    private IEnumerator SpawnCentipedeHeadCoroutine()
+    {
+        yield return new WaitForSeconds(centipedeHeadTimer);
+
+		// rework this chunk to spawn them in the correct place.
+		Vector2 instantionPoint = GetCentipedeInstantiationPointSide();
+		Centipede c = Instantiate(centipede, instantionPoint, Quaternion.identity).GetComponent<Centipede>();
+        centipedeLivingList.Add(c);
+
+		// This is called here because they keep spawning randomly regardless of whether you've killed the last one like fleas, spiders and scorpions
+		SpawnCentipedeHead(); 
+	}
+
+	public void SpawnFlea()
     {
      
         fleaSpawnTimer = Random.Range(fleaTimeMin, fleaTimeMax);
@@ -492,6 +534,8 @@ public class GameManager : MonoBehaviour
 		StopCoroutine("SpawnSpiderCoroutine");
 		StartCoroutine("SpawnSpiderCoroutine");
 	}
+
+
 
 	private IEnumerator SpawnSpiderCoroutine()
 	{
@@ -515,4 +559,13 @@ public class GameManager : MonoBehaviour
 		Vector2 instantionPoint = GetScorpionInstantiationPoint();
 		Instantiate(scorpion, instantionPoint, Quaternion.identity);
 	}
+
+    public void NotifyGMCentipedeReachedBottom()
+    {
+        if (!centipedeHasReachedBottomThisWave)
+        {
+			centipedeHasReachedBottomThisWave = true;
+			SpawnCentipedeHead();
+		}
+    }
 }

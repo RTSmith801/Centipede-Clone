@@ -369,11 +369,13 @@ public class Centipede : Enemy
         switch (ms)
         {
             case MoveState.ascend:
-                moveStateDirection = MoveStateDirection.up;
+				gm.NotifyGMCentipedeReachedBottom();
+				moveStateDirection = MoveStateDirection.up;
 				verticalTarget = transform.position.y + 1;
 				break;
             case MoveState.lateral_ascend:
-                if (movingRight)
+				gm.NotifyGMCentipedeReachedBottom(); 
+				if (movingRight)  // make this a ternary to reduce by 5 lines
                 {
                     moveStateDirection = MoveStateDirection.right;
                 }
