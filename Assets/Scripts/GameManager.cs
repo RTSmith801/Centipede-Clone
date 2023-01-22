@@ -321,8 +321,6 @@ public class GameManager : MonoBehaviour
 		float xPos = Random.Range(0, 100) >= 50 ? -2 : movementBoundaryX;
 		float yPos = (int)Random.Range(spiderBottomBoundary + 4f, spiderTopBoundary); // casted to an int so it always starts on a nice row
 
-        print("sending location: " + new Vector2(xPos, yPos));
-
 		return new Vector2(xPos, yPos);
 	}
 

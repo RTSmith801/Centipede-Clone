@@ -153,6 +153,10 @@ public class Centipede : Enemy
         // This makes it so shooting a diving centipede makes it exit it's dive
         if (centipedeHeadMoveState == MoveState.dive)
             MoveStateSwitch(MoveState.lateral_descend);
+        else if (centipedeHeadMoveState == MoveState.lateral_descend)
+        {
+            MoveStateSwitch(MoveState.descend);
+        }
         else
             MoveStateSwitch(centipedeHeadMoveState);
 
