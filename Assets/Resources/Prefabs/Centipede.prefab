@@ -56,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 34f678244f36d304094dcc15a1826627, type: 2}
+  - {fileID: 2100000, guid: 563a5df3efe309649a931de6656d1716, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,7 +106,6 @@ MonoBehaviour:
   moveState: 0
   nodeAhead: {fileID: 0}
   nodeBehind: {fileID: 0}
-  followQueue: []
   verticalTarget: 0
 --- !u!61 &4355657646874933202
 BoxCollider2D:

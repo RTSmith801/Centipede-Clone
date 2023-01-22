@@ -345,6 +345,13 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
+        // Debugging test section to look at all unique spawn points selected.
+        //string arrayX = "";
+        //foreach (Vector2 item in uniqueSpawnPoints)
+        //{
+        //    arrayX += item.x + " : ";
+        //}
+        //print(arrayX);
 
 
         Vector2 instantionPoint = uniqueSpawnPoints[0];
@@ -475,7 +482,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator GameOver()
+	[ContextMenu("Kill Player")]
+	void KillPlayer()
+	{
+        playerLives++;
+        scoreUpdate(0);
+        PlayerDeath();
+	}
+
+	private IEnumerator GameOver()
     {
         //Flash Game Over Text? 
         scoreUpdate(0);
