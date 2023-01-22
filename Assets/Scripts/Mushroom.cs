@@ -15,18 +15,24 @@ public class Mushroom : MonoBehaviour
     Sprite[] MushroomSpriteAtlasPoisoned;
 
 	int spriteNum;
+    //float lifetimeAwake;
+    //float lifetimeStart;
+    //int awakeCounter = 0;
 
     private void Awake()
     {
+        //awakeCounter++;
+        //lifetimeAwake = Time.time;
         gm = FindObjectOfType<GameManager>();
         sr = GetComponent<SpriteRenderer>();
-    }
+		mushroomSpriteAtlas = Resources.LoadAll<Sprite>("Sprites & Texts/Mushroom");
+		MushroomSpriteAtlasPoisoned = Resources.LoadAll<Sprite>("Sprites & Texts/MushroomPoisoned");
+	}
 
     // Start is called before the first frame update
     void Start()
     {
-        mushroomSpriteAtlas = Resources.LoadAll<Sprite>("Sprites & Texts/Mushroom");
-        MushroomSpriteAtlasPoisoned = Resources.LoadAll<Sprite>("Sprites & Texts/MushroomPoisoned");
+        //lifetimeStart = Time.time;
         spriteNum = health;
         SpriteGeneration();
         //print(sr.sprite);
@@ -68,9 +74,29 @@ public class Mushroom : MonoBehaviour
         Sprite[] currentAtlas = isPoisoned ? MushroomSpriteAtlasPoisoned : mushroomSpriteAtlas;
         if (sr.sprite)
         {
-            //sr.sprite = mushroomSpriteAtlas.Single(s => s.name == "Mushroom_" + spriteNum);
-            sr.sprite = currentAtlas[spriteNum];
-        }
+			//sr.sprite = mushroomSpriteAtlas.Single(s => s.name == "Mushroom_" + spriteNum);
+
+
+			// This try catch was for troubleshohoting an issue where on edge case scenarios the hit() function was getting called
+			// prior to Start() running, meaning the Atlases had not been set. Moving them to Awake() seems to have fixed it, but
+            // I'm leaving this section here in case another rare edge case shows up.
+			try
+			{
+				sr.sprite = currentAtlas[spriteNum];
+			}
+            catch (System.Exception)
+            {
+				//print("lifetimeAwake: " + lifetimeAwake + "; awakeCounter: " + awakeCounter);
+				//float a = Time.time - lifetimeAwake;
+				//float b = Time.time - lifetimeStart;
+				print("You're hitting a weird edge case");
+				//print("spriteNum: " + spriteNum + "; health: " + health + "; currentAtlas: " + currentAtlas + "; isPoisoned: " + isPoisoned + "; Times: " + a + "&" + b);
+				//sr.color= Color.red;
+				throw;
+            }
+
+
+		}
     }
 
     public void HealMushroom()
