@@ -55,7 +55,6 @@ public class Player : MonoBehaviour
     //    }
     //}
     
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (!gm.pauseGame)
@@ -125,7 +124,25 @@ public class Player : MonoBehaviour
 
         mousePos = gm.mainCam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0f;
-        transform.position = mousePos;
+
+        // Raycast logic to slide the ship around mushrooms. If the mouse is colliding with the mushroom
+        // it places the player outside the mushroom 1 unit in the direction of the cursor
+		Vector3 center = mousePos + new Vector3(.4375f, .5f); // the .4375f is because the sprite is 7 pixels wide, not 8. function = (7 / 8) / 2
+		RaycastHit2D[] collisions = Physics2D.CircleCastAll(center, .5f, Vector2.zero);
+        foreach (RaycastHit2D hit in collisions)
+        {
+            if (hit.transform.tag == "mushroom")
+            {
+                print("hitting mushroom");
+                Vector3 vectorBetweenMushroomAndCursor = center - hit.transform.position;
+                transform.position = hit.transform.position + vectorBetweenMushroomAndCursor.normalized;
+                ClampPlayerMovement();
+                return;
+            }
+                
+        }
+
+		transform.position = mousePos;
         ClampPlayerMovement();
     }
 
