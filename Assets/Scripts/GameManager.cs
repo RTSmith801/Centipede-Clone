@@ -328,10 +328,13 @@ public class GameManager : MonoBehaviour
     void SpawnEnemies()
     {
         // Sets the centipede length and how many heads based on wave number
-        centipedeGenerationCount = startingCentipedeGenerationCount - (centipedeWave / 2);
-        int headCount = (centipedeWave / 2);
+        //centipedeGenerationCount = startingCentipedeGenerationCount - (centipedeWave / 2);
+        //int headCount = (centipedeWave / 2);
+        int headCount = ((centipedeWave / 2) % startingCentipedeGenerationCount);
+        centipedeGenerationCount = (startingCentipedeGenerationCount - headCount);
+		
 
-        // Generates a list of unique spawn points the length of how many centipede heads you will have total (including the main centipede)
+		// Generates a list of unique spawn points the length of how many centipede heads you will have total (including the main centipede)
 		List<Vector2> uniqueSpawnPoints = new List<Vector2>();
 		while (uniqueSpawnPoints.Count < headCount + 1)
 		{
