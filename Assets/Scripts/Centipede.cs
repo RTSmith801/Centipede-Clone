@@ -282,19 +282,22 @@ public class Centipede : Enemy
         {
 
             // This section with the boxcast ensures that heads won't stack
-			Vector3 center = transform.localPosition + new Vector3(.5f, .5f);
-			RaycastHit2D[] collide = Physics2D.BoxCastAll(center, new Vector2(.8f, .8f), 0f, Vector2.down, moveSpeed);
+			//Vector3 center = transform.localPosition + new Vector3(.5f, .5f);
+			//RaycastHit2D[] collide = Physics2D.BoxCastAll(center, new Vector2(.8f, .8f), 0f, Vector2.down, moveSpeed);
 
-            foreach (RaycastHit2D hit in collide)
-            {
-                Centipede c = null;
-                if (hit.transform.tag == "enemy" && hit.transform != transform)
-                    c = hit.transform.GetComponent<Centipede>();
+   //         foreach (RaycastHit2D hit in collide)
+   //         {
+   //             Centipede c = null;
+   //             if (hit.transform.tag == "enemy" && hit.transform != transform)
+   //                 c = hit.transform.GetComponent<Centipede>();
 
-                if (c != null && c.isHead)
-                    return;
+   //             if (c != null && c.isHead)
+   //             {
+   //                 MoveStateSwitch(MoveState.lateral_descend);
+   //                 return;
+   //             }
 
-            }
+   //         }
 
 			transform.Translate(0, moveSpeed * -1, 0);
         }

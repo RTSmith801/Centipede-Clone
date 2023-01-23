@@ -7,7 +7,7 @@ public class Mushroom : MonoBehaviour
 {
     public int health = 4;
     public int pts = 1;
-    public bool isPoisoned { get; private set; }
+    public bool isPoisoned;
 
     GameManager gm;
     public SpriteRenderer sr;
